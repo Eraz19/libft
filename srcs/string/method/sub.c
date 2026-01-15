@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:47:11 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/02 20:51:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,17 @@
  * @param start The starting index of the substring
  * @param len The maximum length of the substring
  * @return A new t_dstr containing the substring
+ *
+ * NULL Handling: If str.s is NULL or start >= str.len, returns a NULL t_dstr.
+ * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_sub(t_cstr str, size_t start, size_t len)
 {
 	size_t	i;
 	t_dstr	res;
 
-	if (start >= str.len || str.len == 0)
-		res = dstr_s(1);
+	if (str.s == NULL || start >= str.len)
+		res = dstr_s(0);
 	else if (start + len > str.len)
 		res = dstr_s((str.len - start) + 1);
 	else
@@ -40,8 +43,7 @@ t_dstr	str_sub(t_cstr str, size_t start, size_t len)
 		i = 0;
 		while (i < res.size - 1 && start + i < str.len)
 			1 && (res.s[i] = str.s[start + i], ++i);
-		res.len = i;
-		res.s[i] = '\0';
+		1 && (res.len = i, res.s[i] = '\0');
 	}
 	return (res);
 }

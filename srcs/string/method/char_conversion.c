@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 23:35:24 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/02 23:38:01 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
  *
  * @param c The character to convert
  * @return A new t_dstr containing the character as a string
+ *
+ * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_from_char(t_i8 c)
 {

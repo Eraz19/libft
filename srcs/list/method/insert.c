@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:30:24 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/02 18:20:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/10 19:38:08 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
  * @param lst The list to modify
  * @param node The new node to insert
  * @param index The index at which to insert the new node
+ * Note: Does nothing if lst or node is NULL; if index >= lst->size, inserts at end
  */
-void	lst_insert(t_lst *lst, t_node *node, size_t index)
+t_lst	lst_insert(t_lst *lst, t_node *node, size_t index)
 {
 	size_t	i;
 	t_node	*prev;

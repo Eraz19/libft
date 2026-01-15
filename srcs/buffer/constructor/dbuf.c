@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 16:27:51 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/02 20:52:16 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/15 12:16:35 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
  *
  * @param buf The t_dbuf structure to duplicate
  * @return A new t_dbuf containing a copy of the data
+ *
+ * NULL Handling: If buf.data is NULL, returns a NULL t_dbuf.
+ * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	dbuf_d(t_dbuf buf)
 {
@@ -24,7 +27,7 @@ t_dbuf	dbuf_d(t_dbuf buf)
 	t_dbuf	buf_;
 
 	if (buf.data == NULL)
-		return (buf_.data = NULL, buf_.len = 0, buf_.size = 0, buf_);
+		return (dbuf_s(0));
 	1 && (buf_ = dbuf_s(buf.size), i = 0);
 	while (i < buf.len)
 		1 && (((t_u8 *)buf_.data)[i] = ((t_u8 *)buf.data)[i], ++i);
@@ -37,12 +40,17 @@ t_dbuf	dbuf_d(t_dbuf buf)
  *
  * @param size The size in bytes to allocate (elements * type_size)
  * @return The newly created t_dbuf initialized to zero
+ *
+ * Note: If size = 0, returns a NULL t_dbuf.
+ * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	dbuf_s(size_t size)
 {
 	size_t	i;
 	t_dbuf	buf;
 
+	if (size == 0)
+		return (buf.data = NULL, buf.size = 0, buf.len = 0, buf);
 	buf.data = malloc(size);
 	if (buf.data == NULL)
 		return (buf.size = 0, buf.len = 0, buf);
@@ -56,10 +64,13 @@ t_dbuf	dbuf_s(size_t size)
 }
 
 /**
- * dbuf_c - Creates a new dynamic buffer from a constant buffer
+ * dbuf_c - Creates a new dynamic buffer structure from a constant buffer
  *
  * @param buf The t_cbuf structure to convert
  * @return A new t_dbuf containing a copy of the data
+ *
+ * NULL Handling: If buf.data is NULL, returns a NULL t_dbuf.
+ * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	dbuf_c(t_cbuf buf)
 {
@@ -67,7 +78,7 @@ t_dbuf	dbuf_c(t_cbuf buf)
 	t_dbuf	res;
 
 	if (buf.data == NULL)
-		return (res.data = NULL, res.len = 0, res.size = 0, res);
+		return (dbuf_s(0));
 	res = dbuf_s(buf.size);
 	if (res.data == NULL)
 		return (res);

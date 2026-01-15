@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 15:01:29 by adouieb           #+#    #+#             */
-/*   Updated: 2025/12/29 15:07:04 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/09 12:59:43 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,11 @@
 /**
  * str_print - Outputs the string to the given file descriptor
  *
- * @param str The t_cst containing the string to output
+ * @param str The t_cstr containing the string to output
  * @param fd  The file descriptor to write to
+ * @return void
+ *
+ * NULL Handling: If str.s is NULL, writes "null" to the file descriptor.
  */
 void	str_print(t_cstr str, t_i32 fd)
 {

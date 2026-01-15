@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/30 16:00:00 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/03 23:45:11 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/15 12:29:27 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,10 @@ static void	buf_shift_right(t_dbuf res, size_t i, size_t orig_len, size_t gap)
 	{
 		buf_len = orig_len;
 		while (buf_len > i)
-			1 && (buf_len--, ((t_u8 *)res.data)[buf_len + gap] =
-				((t_u8 *)res.data)[buf_len]);
+		{
+			buf_len--;
+			((t_u8 *)res.data)[buf_len + gap] = ((t_u8 *)res.data)[buf_len];
+		}
 	}
 }
 

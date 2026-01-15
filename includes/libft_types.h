@@ -6,13 +6,14 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 19:05:18 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/01 19:14:15 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/08 15:19:24 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_TYPES_H
 # define LIBFT_TYPES_H
 
+# include <errno.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <limits.h>

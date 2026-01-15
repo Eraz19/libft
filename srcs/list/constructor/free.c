@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 16:57:38 by adouieb           #+#    #+#             */
-/*   Updated: 2025/12/30 23:11:06 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/12 15:45:55 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,28 @@
  *
  * @param lst The list from which to delete the node
  * @param index The index of the node to delete
- * @param del Function pointer to delete the content of the node
+ * @param del Function to delete the content of the node
+ *
+ * NULL Handling: If lst or del is NULL, does nothing.
+ * Note: If index is out of bounds, does nothing.
  */
 void	free_node(t_lst *lst, size_t index, void (*del)(void*))
 {
 	size_t	i;
 	t_node	*prev;
-	t_node	*curnt;
+	t_node	*current;
 
-	if (index >= lst->size)
+	if (lst == NULL || del == NULL || index >= lst->size)
 		return ;
-	1 && (i = 0, prev = NULL, curnt = lst->nodes);
+	1 && (i = 0, prev = NULL, current = lst->nodes);
 	while (i < index)
-		1 && (prev = curnt, curnt = curnt->next, i++);
-	del(curnt->content);
+		1 && (prev = current, current = current->next, i++);
+	del(current->content);
 	if (prev != NULL)
-		prev->next = curnt->next;
+		prev->next = current->next;
 	else
-		lst->nodes = curnt->next;
-	free(curnt);
+		lst->nodes = current->next;
+	free(current);
 	lst->size--;
 }
 
@@ -43,20 +46,24 @@ void	free_node(t_lst *lst, size_t index, void (*del)(void*))
  * free_lst - Deletes and frees all nodes of a list
  *
  * @param lst The list from which to delete the nodes
- * @param del Function pointer to delete the content of a node
+ * @param del Function to delete the content of a node
+ *
+ * NULL Handling: If lst, lst.nodes or del is NULL, does nothing.
  */
 void	free_lst(t_lst *lst, void (*del)(void*))
 {
 	size_t	i;
 	t_node	*next;
-	t_node	*curnt;
+	t_node	*current;
 
-	1 && (i = 0, next = NULL, curnt = lst->nodes);
+	if (lst == NULL || lst->nodes == NULL || del == NULL)
+		return ;
+	1 && (i = 0, next = NULL, current = lst->nodes);
 	while (i < lst->size)
 	{
-		next = curnt->next;
-		1 && (del(curnt->content), free(curnt), lst->size--);
-		curnt = next;
+		next = current->next;
+		1 && (del(current->content), free(current), lst->size--);
+		current = next;
 		i++;
 	}
 	lst->nodes = NULL;

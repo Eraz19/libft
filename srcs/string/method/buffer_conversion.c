@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 23:38:57 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/04 01:09:38 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,29 @@
 /**
  * str_from_buf - Converts a dynamic buffer to a dynamic string
  *
- * @param buf The pointer to the dynamic buffer to convert
- * @return A newly allocated t_dstr with null terminator
+ * MEMORY OWNERSHIP: This function consumes (frees) the input 'buf', the
+ * original 'buf' becomes invalid.
+ * To keep a copy of the buffer, first duplicate it before:
+ *     t_dbuf buf_copy = dbuf_d(original_buf);
+ *     t_dstr str = str_from_buf(&buf_copy);
+ *     original_buf // ✓ remains valid.
+ *
+ * @param buf The pointer to the dynamic buffer to convert (always freed)
+ * @return A newly allocated t_dstr with the buf content and null terminator.
+ *
+ * NULL Handling: If buf->data is NULL, returns a NULL t_dstr.
+ * Error handling: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_from_buf(t_dbuf *buf)
 {
-	t_dstr	str;
 	size_t	i;
+	t_dstr	str;
 
 	if (buf->data == NULL)
-		return (dstr_s(0));
+		return (free_dbuf(buf), dstr_s(0));
 	str = dstr_s(buf->len + 1);
 	if (str.s == NULL)
-		return (str);
+		return (free_dbuf(buf), errno = ENOMEM, str);
 	i = 0;
 	while (i < buf->len)
 		1 && (str.s[i] = ((t_i8 *)(buf->data))[i], ++i);

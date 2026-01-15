@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:18:28 by adouieb           #+#    #+#             */
-/*   Updated: 2025/12/30 23:12:14 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/10 19:38:08 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
  *
  * @param lst The list to iterate over
  * @param f The function to apply to each node's content
+ * Note: Does nothing if lst.nodes is NULL
  */
 void	lst_foreach(t_lst lst, void (*f)(void *))
 {
@@ -40,7 +41,9 @@ void	lst_foreach(t_lst lst, void (*f)(void *))
  * @param lst The list to map over (will be freed)
  * @param f The function to apply to each node's content
  * @param del Function pointer to delete content on failure
- * @return A new list with transformed nodes, or NULL list content on failure
+ * @return A new list with transformed nodes; returns empty list (size=0, nodes=NULL)
+ *         if lst.nodes is NULL, or if allocation fails, or if f returns NULL
+ *         (input lst is freed in all cases)
  */
 t_lst	lst_map(t_lst lst, void *(*f)(void *), void (*del)(void *))
 {

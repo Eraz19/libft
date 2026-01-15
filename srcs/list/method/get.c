@@ -17,7 +17,7 @@
  *
  * @param lst The list to traverse
  * @param index The index of the node to retrieve
- * @return The node at the specified index, or NULL if out of bounds
+ * @return The node at the specified index, or NULL if out of bounds or list is empty
  */
 t_node	*get(t_lst lst, size_t index)
 {

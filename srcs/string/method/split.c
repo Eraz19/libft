@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:19:11 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/02 20:50:34 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/12 14:17:07 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
  * @param str The t_cstr structure to split
  * @param c The delimiter character
  * @return The buffer with split substrings
+ *
+ * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 static t_dbuf	str_split_(t_dbuf res, t_cstr str, t_i8 c)
 {
@@ -38,6 +40,8 @@ static t_dbuf	str_split_(t_dbuf res, t_cstr str, t_i8 c)
 			if (sub_str.s == NULL)
 				return (free_dstrs(&res), res);
 			res = buf_insertc(res, cbuf(&sub_str, sizeof(t_dstr)), res.len, E_);
+			if (res.data == NULL)
+				return (free_dstr(&sub_str), free_dstrs(&res), res);
 			1 && (++j, start = -1);
 		}
 		++i;
@@ -76,18 +80,19 @@ static t_u32	str_count_words(t_cstr str, t_i8 c)
  * @param str The t_cstr structure to split
  * @param c The delimiter character
  * @return A t_dbuf containing an array of t_dstr substrings
+ *
+ * NULL Handling: If str.s is NULL, returns a NULL t_dbuf.
+ * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	str_split(t_cstr str, t_i8 c)
 {
 	t_dbuf	res;
 
 	if (str.s == NULL)
-		return (res.data = NULL, res.size = 0, res.len = 0, res);
+		return (dbuf_s(0));
 	(res = dbuf_s(str_count_words(str, c) * sizeof(t_dstr)));
 	if (res.data == NULL)
 		return (res);
 	res = str_split_(res, str, c);
-	if (res.data == NULL)
-		return (res);
 	return (res);
 }
