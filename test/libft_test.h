@@ -14,6 +14,7 @@
 # define LIBFT_TEST_H
 
 # include <stdio.h>
+# include <fcntl.h>
 
 // ============================================================================
 // COLOR CODES
@@ -352,37 +353,44 @@
  * fmemopen and file descriptor redirection, then compares both the
  * output strings and return values.
  * 
- * Usage: TEST_PRINTF("%d %s", 42, "hello");
+ * Usage: TEST_PRINTF(description, format, ...);
+ * Example: TEST_PRINTF("integer zero", "%d", 0);
  * 
  * Requirements:
  * - Must have global variables g_printf_tests_* in scope
  * - Must include <unistd.h> for dup/dup2
  * - Must include <string.h> for strcmp
  */
-# define TEST_PRINTF(format, ...) \
+# define TEST_PRINTF(description, format, ...) \
 	do { \
 		char expected[1024] = {0}; \
 		char actual[1024] = {0}; \
 		int exp_ret, act_ret; \
-		FILE *exp_fp = fmemopen(expected, sizeof(expected), "w"); \
-		FILE *act_fp = fmemopen(actual, sizeof(actual), "w"); \
 		int saved_stdout = dup(STDOUT_FILENO); \
+		int devnull = open("/dev/null", O_WRONLY); \
+		FILE *exp_fp = fmemopen(expected, sizeof(expected), "w"); \
+		dup2(devnull, STDOUT_FILENO); \
 		dup2(fileno(exp_fp), STDOUT_FILENO); \
 		exp_ret = printf(format, ##__VA_ARGS__); \
 		fflush(stdout); \
 		fclose(exp_fp); \
+		dup2(saved_stdout, STDOUT_FILENO); \
+		FILE *act_fp = fmemopen(actual, sizeof(actual), "w"); \
+		dup2(devnull, STDOUT_FILENO); \
 		dup2(fileno(act_fp), STDOUT_FILENO); \
 		act_ret = ft_printf(format, ##__VA_ARGS__); \
 		fflush(stdout); \
 		fclose(act_fp); \
 		dup2(saved_stdout, STDOUT_FILENO); \
+		close(devnull); \
 		close(saved_stdout); \
 		g_printf_tests_run++; \
 		if (exp_ret == act_ret && strcmp(expected, actual) == 0) { \
-			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "\"" format "\"\n", g_printf_tests_run, ##__VA_ARGS__); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_printf_tests_run, description); \
 			g_printf_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "\"" format "\"\n", g_printf_tests_run, ##__VA_ARGS__); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_printf_tests_run, description); \
+			printf("    Format: \"" format "\"\n", ##__VA_ARGS__); \
 			printf("    Expected: \"%s\" (ret=%d)\n", expected, exp_ret); \
 			printf("    Got:      \"%s\" (ret=%d)\n", actual, act_ret); \
 			g_printf_tests_failed++; \
