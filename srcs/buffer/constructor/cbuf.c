@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/30 16:15:00 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/15 12:24:06 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 17:04:04 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_cbuf	cbuf(const void *data, size_t size)
  * @return A t_cbuf representing the same data where size is buf.len
  *
  * NULL Handling: If buf.data is NULL, returns a NULL t_cbuf.
+ * WARNING: The size value of the result t_cbuf is buf.len not buf.size.
  */
 t_cbuf	cbuf_d(t_dbuf buf)
 {

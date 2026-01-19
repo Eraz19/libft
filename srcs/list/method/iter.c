@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:18:28 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/10 19:38:08 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 17:31:43 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,56 +17,63 @@
  *
  * @param lst The list to iterate over
  * @param f The function to apply to each node's content
- * Note: Does nothing if lst.nodes is NULL
+ * 
+ * Note: If lst.nodes is NULL, does nothing.
  */
 void	lst_foreach(t_lst lst, void (*f)(void *))
 {
 	size_t	i;
-	t_node	*curnt;
+	t_node	*current;
 
-	if (lst.nodes == NULL)
+	if (lst.nodes == NULL || f == NULL)
 		return ;
-	1 && (i = 0, curnt = lst.nodes);
+	1 && (i = 0, current = lst.nodes);
 	while (i < lst.size)
-		(f(curnt->content), curnt = curnt->next, i++);
+		(f(current->content), current = current->next, i++);
 }
 
 /**
  * lst_map - Applies a function to each node to create a new list
  *
- * MEMORY OWNERSHIP: This function consumes (frees) the input 'lst' and
- * returns a newly allocated list. Always reassign the result:
- *     lst = lst_map(lst, transform, del);  // ✓ Correct usage
+ * MEMORY OWNERSHIP: This function consumes (frees) the input 'lst', the
+ * original 'lst' becomes invalid.
+ * To keep a copy of the list, first duplicate it before. 
+ * Always reassign the result:
+ *     t_lst lst = lst_l(original_lst);
+ *     lst = lst_map(&lst, transform, del);  // ✓ Correct usage
+ *     original_lst                          // ✓ remains valid
  *
- * @param lst The list to map over (will be freed)
+ * @param lst The list to map over (always freed)
  * @param f The function to apply to each node's content
- * @param del Function pointer to delete content on failure
- * @return A new list with transformed nodes; returns empty list (size=0, nodes=NULL)
- *         if lst.nodes is NULL, or if allocation fails, or if f returns NULL
- *         (input lst is freed in all cases)
+ * @param del The function to free node content
+ * @return A new list with transformed nodes
+ * 
+ * NULL Handling: If lst, lst->nodes, f, or del is NULL, returns an empty list.
+ * Error: If allocation fails, returns a NULL list (errno ENOMEM).
+ *
  */
-t_lst	lst_map(t_lst lst, void *(*f)(void *), void (*del)(void *))
+t_lst	lst_map(t_lst *lst, void *(*f)(void *), void (*del)(void *))
 {
 	size_t	i;
 	t_lst	res;
 	t_node	*new;
-	void	*ctnt;
-	t_node	*curnt;
+	void	*content;
+	t_node	*current;
 
-	1 && (i = 0, res = lst_(), new = NULL, curnt = lst.nodes);
-	if (lst.nodes == NULL)
-		return (res);
-	while (i < lst.size)
+	if (lst == NULL || lst->nodes == NULL || f == NULL || del == NULL)
+		return (lst_());
+	1 && (i = 0, res = lst_(), new = NULL, current = lst->nodes);
+	while (i < lst->size)
 	{
-		ctnt = f(curnt->content);
-		if (ctnt == NULL)
-			return (free_lst(&res, del), free_lst(&lst, del), res);
-		new = node(ctnt);
+		content = f(current->content);
+		if (content == NULL)
+			return (free_lst(&res, del), free_lst(lst, del), res);
+		new = node(content);
 		if (new == NULL)
-			return (del(ctnt), free_lst(&res, del), free_lst(&lst, del), res);
+			return (del(content), free_lst(&res, del), free_lst(lst, del), res);
 		lst_insert(&res, new, res.size);
-		1 && (curnt = curnt->next, i++);
+		1 && (current = current->next, i++);
 	}
-	free_lst(&lst, del);
+	free_lst(lst, del);
 	return (res);
 }

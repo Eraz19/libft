@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:30:31 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:32:24 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 18:24:00 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,15 @@ static t_dstr	str_realloc(t_dstr *str, size_t new_size)
  *
  * @param res The t_dstr containing the string to shift
  * @param i The starting position for the shift
- * @param orig_len The original length of the string
+ * @param origin_len The original length of the string
  * @param gap The number of positions to shift by
  */
-static void	str_shift_right(t_dstr res, size_t i, size_t orig_len, size_t gap)
+static void	str_shift_right(t_dstr res, size_t i, size_t origin_len, size_t gap)
 {
-	while (orig_len > i)
+	while (origin_len > i)
 	{
-		orig_len--;
-		((t_u8 *)res.s)[orig_len + gap] = ((t_u8 *)res.s)[orig_len];
+		origin_len--;
+		((t_u8 *)res.s)[origin_len + gap] = ((t_u8 *)res.s)[origin_len];
 	}
 }
 
@@ -84,7 +84,7 @@ static void	str_shift_right(t_dstr res, size_t i, size_t orig_len, size_t gap)
  *
  * NULL Handling: If both str, str->s and insrt.s are NULL, returns a NULL
  *                    t_dstr.
- *                If only str and str->s is NULL, returns a duplicate of insrt.
+ *                If only str and str->s is NULL, returns insrt.
  *                If only insrt.s is NULL, returns str untouched.
  * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
@@ -92,7 +92,7 @@ t_dstr	str_insertc(t_dstr *str, t_cstr insrt, size_t i)
 {
 	size_t	j;
 	size_t	new_size;
-	size_t	orig_len;
+	size_t	origin_len;
 
 	if (str == NULL || (str->s == NULL && insrt.s == NULL))
 		return (dstr_s(0));
@@ -100,14 +100,14 @@ t_dstr	str_insertc(t_dstr *str, t_cstr insrt, size_t i)
 		return (dstr_c(insrt));
 	if (insrt.s == NULL)
 		return (*str);
-	1 && (j = 0, new_size = str->len + insrt.len, orig_len = str->len);
+	1 && (j = 0, new_size = str->len + insrt.len, origin_len = str->len);
 	if (i > str->len)
 		i = str->len;
 	if (new_size + 1 > str->size)
 		*str = str_realloc(str, new_size + 1);
 	if (str->s == NULL)
 		return (*str);
-	str_shift_right(*str, i, orig_len, insrt.len);
+	str_shift_right(*str, i, origin_len, insrt.len);
 	while (j < insrt.len)
 		1 && (((t_u8 *)str->s)[i + j] = ((const t_u8 *)insrt.s)[j], j++);
 	str->s[new_size] = '\0';
@@ -136,7 +136,7 @@ t_dstr	str_insertc(t_dstr *str, t_cstr insrt, size_t i)
  *
  * NULL Handling: If both str, insert, str->s and insrt.s are NULL, returns a
  *                    NULL t_dstr.
- *                If only str and str->s is NULL, returns a duplicate of insrt.
+ *                If only str and str->s is NULL, returns insrt.
  *                If only insert and insrt.s is NULL, returns str untouched.
  * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
@@ -145,7 +145,7 @@ t_dstr	str_insert(t_dstr *str, t_dstr *insrt, size_t i)
 	size_t	j;
 	t_dstr	res;
 	size_t	new_size;
-	size_t	orig_len;
+	size_t	origin_len;
 
 	if ((str == NULL && insrt == NULL) || (str->s == NULL && insrt->s == NULL))
 		return (dstr_s(0));
@@ -153,14 +153,14 @@ t_dstr	str_insert(t_dstr *str, t_dstr *insrt, size_t i)
 		return (res = dstr_d(*insrt), free_dstr(insrt), res);
 	if (insrt == NULL || insrt->s == NULL)
 		return (free_dstr(insrt), *str);
-	1 && (j = 0, new_size = str->len + insrt->len, orig_len = str->len);
+	1 && (j = 0, new_size = str->len + insrt->len, origin_len = str->len);
 	if (i > str->len)
 		i = str->len;
 	if (new_size + 1 > str->size)
 		*str = str_realloc(str, new_size + 1);
 	if (str->s == NULL)
 		return (free_dstr(insrt), *str);
-	str_shift_right(*str, i, orig_len, insrt->len);
+	str_shift_right(*str, i, origin_len, insrt->len);
 	while (j < insrt->len)
 		1 && (((t_u8 *)str->s)[i + j] = ((const t_u8 *)insrt->s)[j], j++);
 	str->s[new_size] = '\0';

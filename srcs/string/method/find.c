@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:11:13 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/09 12:46:16 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 11:42:04 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ ssize_t	str_findlastindex(t_cstr str, t_i8 c)
 {
 	size_t	i;
 
-	if (str.s == NULL)
+	if (str.s == NULL || str.len == 0)
 		return (-1);
 	i = str.len - 1;
 	while (i > 0)
@@ -127,7 +127,7 @@ ssize_t	str_findlastindex(t_cstr str, t_i8 c)
 t_cstr	str_findsub(t_cstr str, t_cstr sub)
 {
 	size_t	i;
-	size_t	m_i;
+	size_t	match_i;
 
 	i = 0;
 	if (str.s == NULL)
@@ -136,10 +136,10 @@ t_cstr	str_findsub(t_cstr str, t_cstr sub)
 		return (str);
 	while (i < str.len)
 	{
-		m_i = 0;
-		while (m_i < sub.len && i + m_i < str.len && str.s[i + m_i] == sub.s[m_i])
-			++m_i;
-		if (m_i == sub.len)
+		match_i = 0;
+		while (i + match_i < str.len && str.s[i + match_i] == sub.s[match_i])
+			++match_i;
+		if (match_i == sub.len)
 			return (str_shift(str, i));
 		++i;
 	}

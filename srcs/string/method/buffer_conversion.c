@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 23:38:57 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/16 11:51:33 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_dstr	str_from_buf(t_dbuf *buf)
 		return (free_dbuf(buf), dstr_s(0));
 	str = dstr_s(buf->len + 1);
 	if (str.s == NULL)
-		return (free_dbuf(buf), errno = ENOMEM, str);
+		return (free_dbuf(buf), str);
 	i = 0;
 	while (i < buf->len)
 		1 && (str.s[i] = ((t_i8 *)(buf->data))[i], ++i);

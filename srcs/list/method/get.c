@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:22:39 by adouieb           #+#    #+#             */
-/*   Updated: 2025/12/30 23:11:37 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 17:17:45 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,20 @@
  *
  * @param lst The list to traverse
  * @param index The index of the node to retrieve
- * @return The node at the specified index, or NULL if out of bounds or list is empty
+ * @return The node at the specified index
+ *
+ * NULL Handling: if lst.nodes is NULL, returns NULL.
+ * Note: If index is out of bounds (>= lst.size), returns NULL.
  */
 t_node	*get(t_lst lst, size_t index)
 {
 	size_t	i;
-	t_node	*curnt;
+	t_node	*current;
 
-	if (lst.size == 0 || index >= lst.size)
+	if (lst.nodes == NULL || index >= lst.size)
 		return (NULL);
-	1 && (curnt = lst.nodes, i = 0);
+	1 && (current = lst.nodes, i = 0);
 	while (i < index && i < lst.size)
-		curnt = curnt->next;
-	return (curnt);
+		1 && (current = current->next, ++i);
+	return (current);
 }

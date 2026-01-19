@@ -6,24 +6,34 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:18:08 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 18:22:56 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /**
- * c_isspace - Checks if a character is a whitespace character
+ * is_overflow - Checks if adding a digit causes overflow for long
  *
- * @param c The character to check
- * @return TRUE if whitespace, FALSE otherwise
+ * @param current The current long value
+ * @param digit The next digit to add
+ * @param base The base of the number system
+ * @param sign The sign of the number (1 for positive, -1 for negative)
+ * @return TRUE if overflow would occur, FALSE otherwise
  */
-static t_bool	c_isspace(t_i8 c)
+static t_bool	is_overflow(t_i64 current, t_i32 digit, t_i32 base, t_i32 sign)
 {
-	if ((c >= '\t' && c <= '\r') || c == ' ')
-		return (TRUE);
+	if (sign == 1)
+	{
+		if (current > (LONG_MAX - digit) / base)
+			return (TRUE);
+	}
 	else
-		return (FALSE);
+	{
+		if (current < (LONG_MIN + digit) / base)
+			return (TRUE);
+	}
+	return (FALSE);
 }
 
 /**
@@ -40,31 +50,32 @@ static t_bool	c_isspace(t_i8 c)
  * NULL Handling: If nptr.s or base.s is NULL, returns 0.
  * Note: If base.len < 2, returns 0.
  */
-t_i64	str_to_long(t_cstr nptr, t_cstr base)
+t_bool	str_to_long(t_i64 *res, t_cstr nptr, t_cstr base)
 {
 	size_t	i;
-	t_i64	res;
 	t_i32	sign;
-	ssize_t	index;
+	ssize_t	base_i;
 
-	1 && (i = 0, res = 0, sign = 1, index = 0);
 	if (nptr.s == NULL || base.s == NULL || base.len < 2)
-		return (0);
+		return (FALSE);
+	1 && (i = 0, *res = 0, sign = 1, base_i = 0);
 	while (i < nptr.len && c_isspace(nptr.s[i]))
 		++i;
-	if (i < nptr.len && (nptr.s[i] == '+' || nptr.s[i] == '-'))
-	{
-		if (nptr.s[i] == '-')
-			sign = -1;
+	if (i < nptr.len && nptr.s[i] == '-')
+		1 && (sign = -1, ++i);
+	else if (i < nptr.len && nptr.s[i] == '+')
 		++i;
-	}
-	while (i < nptr.len && index != -1)
+	while (i < nptr.len && base_i != -1)
 	{
-		index = str_findindex(base, nptr.s[i]);
-		if (index != -1)
-			1 && (res = (res * (t_i64)base.len) + index, ++i);
+		base_i = str_findindex(base, nptr.s[i]);
+		if (base_i != -1)
+		{
+			if (is_overflow(*res, (t_i32)base_i, (t_i32)base.len, sign) == TRUE)
+				return (FALSE);
+			1 && (*res = (*res * (t_i32)base.len) + (t_i32)base_i, ++i);
+		}
 	}
-	return (sign * res);
+	return (*res *= sign, TRUE);
 }
 
 /**
@@ -72,7 +83,7 @@ t_i64	str_to_long(t_cstr nptr, t_cstr base)
  *
  * @param n The unsigned long value
  * @param base The character set representing the base
- * @param buf The pointer to the buffer to write to
+ * @param buf The buffer to write to
  * @return The updated buffer after conversion
  *
  * Error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
@@ -81,7 +92,7 @@ static t_dbuf	str_from_ulong_(t_u64 n, t_cstr base, t_dbuf buf)
 {
 	while (n != 0)
 	{
-		buf = buf_insertc(buf, cbuf(&base.s[n % base.len], 1), 0, E_);
+		buf = buf_insertc(&buf, cbuf(&base.s[n % base.len], 1), 0, E);
 		if (buf.data == NULL)
 			return (buf);
 		n /= base.len;
@@ -94,7 +105,7 @@ static t_dbuf	str_from_ulong_(t_u64 n, t_cstr base, t_dbuf buf)
  *
  * @param n The signed long value
  * @param base The character set representing the base
- * @param buf The pointer to the buffer to write to
+ * @param buf The buffer to write to
  * @return The updated buffer after conversion
  *
  * Error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
@@ -109,13 +120,13 @@ static t_dbuf	str_from_long_(t_i64 n, t_cstr base, t_dbuf buf)
 		is_neg = TRUE;
 	while (abs_n != 0)
 	{
-		buf = buf_insertc(buf, cbuf(&base.s[abs_n % base.len], 1), 0, E_);
+		buf = buf_insertc(&buf, cbuf(&base.s[abs_n % base.len], 1), 0, E);
 		if (buf.data == NULL)
 			return (buf);
 		abs_n /= base.len;
 	}
 	if (is_neg)
-		buf = buf_insertc(buf, cbuf("-", 1), 0, E_);
+		buf = buf_insertc(&buf, cbuf("-", 1), 0, E);
 	return (buf);
 }
 
@@ -141,6 +152,8 @@ t_dstr	str_from_long(t_i64 n, t_cstr base, t_bool sign)
 	if (n == 0)
 		return (str_from_char(base.s[0]));
 	buf = dbuf_s(I64_BUFFER);
+	if (buf.data == NULL)
+		return (dstr_s(0));
 	if (sign == FALSE)
 		buf = str_from_ulong_((t_u64)n, base, buf);
 	else
@@ -148,6 +161,5 @@ t_dstr	str_from_long(t_i64 n, t_cstr base, t_bool sign)
 	if (buf.data == NULL)
 		return (dstr_s(0));
 	res = str_from_buf(&buf);
-	free_dbuf(&buf);
 	return (res);
 }

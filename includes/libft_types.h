@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 19:05:18 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/08 15:19:24 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 11:19:52 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,47 +67,6 @@ typedef long			t_i64;
 typedef unsigned long	t_u64;
 
 typedef t_u32			t_bool;
-
-typedef struct s_node
-{
-	void			*content;
-	struct s_node	*next;
-}	t_node;
-typedef struct s_list
-{
-	t_node	*nodes;
-	size_t	size;
-}	t_lst;
-
-typedef struct t_dstring
-{
-	t_i8	*s;
-	size_t	len;
-	size_t	size;
-}	t_dstr;
-typedef struct t_cstring
-{
-	const t_i8	*s;
-	size_t		len;
-	size_t		size;
-}	t_cstr;
-
-typedef struct t_dbuffer
-{
-	void	*data;
-	size_t	size;
-	size_t	len;
-}	t_dbuf;
-typedef struct t_cbuffer
-{
-	const void	*data;
-	size_t		size;
-}	t_cbuf;
-typedef enum e_buf_strategy
-{
-	E_,
-	x2_,
-}	t_buf_strat;
 
 typedef union u_drop_const_uc_ptr
 {

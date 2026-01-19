@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 19:05:18 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/02 18:20:27 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 17:25:33 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,20 @@
 
 # include "libft_types.h"
 
+typedef struct s_node
+{
+	void			*content;
+	struct s_node	*next;
+}	t_node;
+typedef struct s_list
+{
+	t_node	*nodes;
+	size_t	size;
+}	t_lst;
+
 t_lst	lst_(void);
 t_lst	lst_n(t_node *node);
+t_lst	lst_l(t_lst list, void *(*copy)(void *), void (*del)(void *));
 
 t_node	*node(void *content);
 
@@ -25,9 +37,9 @@ void	free_node(t_lst *lst, size_t index, void (*del)(void*));
 
 t_node	*get(t_lst lst, size_t index);
 
-void	lst_insert(t_lst *lst, t_node *node, size_t index);
+t_lst	lst_insert(t_lst *lst, t_node *node, size_t index);
 
 void	lst_foreach(t_lst lst, void (*f)(void *));
-t_lst	lst_map(t_lst lst, void *(*f)(void *), void (*del)(void *));
+t_lst	lst_map(t_lst *lst, void *(*f)(void *), void (*del)(void *));
 
 #endif

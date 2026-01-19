@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:19:11 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:17:07 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 15:29:33 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static t_dbuf	str_split_(t_dbuf res, t_cstr str, t_i8 c)
 			sub_str = str_sub(str, (t_u32)start, i - (size_t)start);
 			if (sub_str.s == NULL)
 				return (free_dstrs(&res), res);
-			res = buf_insertc(res, cbuf(&sub_str, sizeof(t_dstr)), res.len, E_);
+			res = buf_insertc(&res, cbuf(&sub_str, sizeof(t_dstr)), res.len, E);
 			if (res.data == NULL)
 				return (free_dstr(&sub_str), free_dstrs(&res), res);
 			1 && (++j, start = -1);
@@ -88,7 +88,7 @@ t_dbuf	str_split(t_cstr str, t_i8 c)
 {
 	t_dbuf	res;
 
-	if (str.s == NULL)
+	if (str.s == NULL || str.len == 0)
 		return (dbuf_s(0));
 	(res = dbuf_s(str_count_words(str, c) * sizeof(t_dstr)));
 	if (res.data == NULL)

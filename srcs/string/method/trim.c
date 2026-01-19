@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:17:47 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 16:07:55 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,13 @@
  *
  * NULL Handling: If str.s is NULL, returns a NULL t_dstr.
  *                If set.s is NULL, returns a duplicate of str.
+ * Note: If all characters are trimmed, returns an empty string (not NULL).
  * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_trim(t_dstr *str, t_cstr set)
 {
-	size_t	end;
 	t_dstr	res;
+	size_t	end;
 	size_t	start;
 
 	if (str->s == NULL)
@@ -46,6 +47,8 @@ t_dstr	str_trim(t_dstr *str, t_cstr set)
 		++start;
 	while (end > start && str_findchr(set, str->s[end - 1]).s)
 		--end;
+	if (start == end)
+		return (free_dstr(str), dstr_s(1));
 	res = str_sub(cstr_d(*str), start, end - start);
 	free_dstr(str);
 	return (res);

@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:47:11 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 10:25:51 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "libft.h"
+#include "libft.h"
 
 /**
  * str_sub - Extracts a substring from a constant string

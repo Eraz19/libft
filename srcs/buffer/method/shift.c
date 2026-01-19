@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/30 15:41:30 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/15 12:29:22 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 18:18:24 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ t_cbuf	buf_shift(t_cbuf buf, size_t offset)
 {
 	if (buf.data == NULL)
 		return (buf);
-	if (offset > buf.size)
+	if (offset >= buf.size)
 		return (cbuf(NULL, 0));
-	buf.data += offset;
+	buf.data = (const t_u8 *)(buf.data) + offset;
 	buf.size -= offset;
 	return (buf);
 }

@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 16:15:19 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 16:08:37 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,30 @@
  * @return A new string that is the result of repeating str n times
  *
  * NULL Handling: If str.s is NULL or n is 0, returns a NULL t_dstr.
+ * Note: If str is an empty string (str.len == 0), returns an empty string.
  * Error handling: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_repeat(t_cstr str, size_t n)
 {
 	size_t	i;
-	t_dstr	out;
+	size_t	j;
+	t_dstr	res;
 
 	if (str.s == NULL || n == 0)
 		return (dstr_s(0));
-	1 && (out = dstr_s((str.len * n) + 1), i = 0);
-	if (out.s == NULL)
-		return (out);
-	while (i < n && out.s != NULL)
-		1 && (out = str_insertc(&out, str, out.len), i++);
-	return (out);
+	if (str.len == 0)
+		return (dstr_s(1));
+	1 && (res = dstr_s((str.len * n) + 1), i = 0);
+	if (res.s == NULL)
+		return (res);
+	while (i < n && res.s != NULL)
+	{
+		j = 0;
+		while (j < str.len)
+			1 && (res.s[(i * str.len) + j] = str.s[j], j++);
+		i++;
+	}
+	res.s[str.len * n] = '\0';
+	res.len = str.len * n;
+	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:24:19 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/08 15:19:07 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 11:25:21 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,6 @@
 # include "libft_types.h"
 # include "libft_string.h"
 # include "libft_buffer.h"
+# include "libft_printf.h"
 
 #endif

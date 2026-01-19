@@ -6,33 +6,46 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:02:59 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 15:52:28 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 18:16:08 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_lst	lst_l(t_lst list, void *(*copy)(void *))
+/**
+ * lst_l - Creates a new list by copying an existing list
+ *
+ * @param list The list to copy
+ * @param copy The function to copy the content of each node
+ * @param del The function to delete the content in case of failure
+ * @return The newly created list
+ *
+ * NULL Handling: If list.nodes, copy, or del is NULL, returns an empty list.
+ * Error: If allocation fails, returns an empty list (errno ENOMEM).
+ */
+t_lst	lst_l(t_lst list, void *(*copy)(void *), void (*del)(void *))
 {
+	size_t	i;
 	t_lst	res;
-	void	*ctnt;
-	t_node	*current;
+	t_node	*new;
+	void	*content;
 
-	1 && (res = lst_(), current = list.nodes,i = 0);
-	if (list.nodes == NULL || copy == NULL)
-		return (res);
-	while()
+	if (list.nodes == NULL || copy == NULL || del == NULL)
+		return (lst_());
+	1 && (res = lst_(), i = 0);
+	while (i < list.size)
 	{
-		ctnt = copy(list.nodes->content);
-		
-		if (ctnt == NULL)
-		{
-			free_lst(&res, free);
-			return (lst_());
-		}
-		lst_insert(&res, node(f(list.nodes->content)), res.size);
+		content = copy(list.nodes->content);
+		if (content == NULL)
+			return (free_lst(&res, del), lst_());
+		new = node(content);
+		if (new == NULL)
+			return (del(content), free_lst(&res, del), lst_());
+		lst_insert(&res, new, res.size);
 		list.nodes = list.nodes->next;
+		++i;
 	}
+	return (res);
 }
 
 /**
@@ -63,7 +76,7 @@ t_lst	lst_n(t_node *node)
 	t_lst	res;
 
 	if (node == NULL)
-		return (res.size = 0, res.nodes = NULL, res);
+		return (lst_());
 	res.nodes = node;
 	res.size = 1;
 	return (res);

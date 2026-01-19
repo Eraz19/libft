@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_char.h                                       :+:      :+:    :+:   */
+/*   isspace.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/10 19:05:18 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 12:44:07 by adouieb          ###   ########.fr       */
+/*   Created: 2026/01/19 12:41:35 by adouieb           #+#    #+#             */
+/*   Updated: 2026/01/19 12:44:14 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_CHAR_H
-# define LIBFT_CHAR_H
+#include "libft.h"
 
-# include "libft_types.h"
-
-t_bool	c_isalpha(t_i32 c);
-t_bool	c_isdigit(t_i32 c);
-t_bool	c_isalnum(t_i32 c);
-t_bool	c_isascii(t_i32 c);
-t_bool	c_isprint(t_i32 c);
-t_bool	c_isspace(t_i32 c);
-t_i32	c_tolower(t_i32 c);
-t_i32	c_toupper(t_i32 c);
-
-#endif
+/**
+ * c_isspace - Checks if a character is a whitespace character
+ *
+ * @param c The character to check
+ * @return TRUE if whitespace, FALSE otherwise
+ *
+ * Note: Whitespace characters are: space, tab, newline, vertical tab,
+ */
+t_bool	c_isspace(t_i32 c)
+{
+	if ((c >= '\t' && c <= '\r') || c == ' ')
+		return (TRUE);
+	else
+		return (FALSE);
+}

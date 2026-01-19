@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 16:57:38 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 15:45:55 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 17:52:37 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,5 @@ void	free_lst(t_lst *lst, void (*del)(void*))
 		i++;
 	}
 	lst->nodes = NULL;
+	lst->size = 0;
 }
