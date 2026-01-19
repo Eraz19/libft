@@ -59,10 +59,10 @@
 	do { \
 		g_tests_run++; \
 		if (condition) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_tests_run, message); \
 			g_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_tests_run, message); \
 			g_tests_failed++; \
 		} \
 	} while(0)
@@ -141,10 +141,10 @@
 	do { \
 		g_tests_run++; \
 		if (condition) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_tests_run, message); \
 			g_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_tests_run, message); \
 			g_tests_failed++; \
 		} \
 	} while(0)
@@ -157,10 +157,10 @@
 	do { \
 		g_buf_tests_run++; \
 		if (condition) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_buf_tests_run, message); \
 			g_buf_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_buf_tests_run, message); \
 			g_buf_tests_failed++; \
 		} \
 	} while(0)
@@ -173,10 +173,10 @@
 	do { \
 		g_list_tests_run++; \
 		if (condition) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_list_tests_run, message); \
 			g_list_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_list_tests_run, message); \
 			g_list_tests_failed++; \
 		} \
 	} while(0)
@@ -189,10 +189,10 @@
 	do { \
 		g_char_tests_run++; \
 		if (condition) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_char_tests_run, message); \
 			g_char_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_char_tests_run, message); \
 			g_char_tests_failed++; \
 		} \
 	} while(0)
@@ -205,10 +205,10 @@
 	do { \
 		g_math_tests_run++; \
 		if (condition) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_math_tests_run, message); \
 			g_math_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_math_tests_run, message); \
 			g_math_tests_failed++; \
 		} \
 	} while(0)
@@ -221,10 +221,10 @@
 	do { \
 		g_printf_tests_run++; \
 		if (condition) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_printf_tests_run, message); \
 			g_printf_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "%s\n", message); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_printf_tests_run, message); \
 			g_printf_tests_failed++; \
 		} \
 	} while(0)
@@ -379,10 +379,10 @@
 		close(saved_stdout); \
 		g_printf_tests_run++; \
 		if (exp_ret == act_ret && strcmp(expected, actual) == 0) { \
-			printf(COLOR_GREEN "  ✓ " COLOR_RESET "\"" format "\"\n", ##__VA_ARGS__); \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "\"" format "\"\n", g_printf_tests_run, ##__VA_ARGS__); \
 			g_printf_tests_passed++; \
 		} else { \
-			printf(COLOR_RED "  ✗ " COLOR_RESET "\"" format "\"\n", ##__VA_ARGS__); \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "\"" format "\"\n", g_printf_tests_run, ##__VA_ARGS__); \
 			printf("    Expected: \"%s\" (ret=%d)\n", expected, exp_ret); \
 			printf("    Got:      \"%s\" (ret=%d)\n", actual, act_ret); \
 			g_printf_tests_failed++; \
