@@ -6,7 +6,7 @@
 #    By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/12 00:00:00 by Copilot           #+#    #+#              #
-#    Updated: 2026/01/21 16:37:46 by adouieb          ###   ########.fr        #
+#    Updated: 2026/01/21 19:21:13 by adouieb          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,7 +69,8 @@ LIST_SRCS:=${LIST_DIR}/constructor/free.c	\
 		${LIST_DIR}/method/insert.c			\
 		${LIST_DIR}/constructor/lst.c		\
 		${LIST_DIR}/constructor/node.c
-MATH_SRCS:=${MATH_DIR}/abs.c
+MATH_SRCS:=${MATH_DIR}/abs.c	\
+		${MATH_DIR}/is_prime.c
 PRINTF_SRCS:=${PRINTF_DIR}/printf.c			\
 		${PRINTF_DIR}/parse.c				\
 		${PRINTF_DIR}/rule.c				\

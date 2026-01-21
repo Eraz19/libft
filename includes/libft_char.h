@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 19:05:18 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 12:44:07 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 20:05:50 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,8 @@ t_bool	c_isprint(t_i32 c);
 t_bool	c_isspace(t_i32 c);
 t_i32	c_tolower(t_i32 c);
 t_i32	c_toupper(t_i32 c);
+t_bool	c_ishexdigit(t_i32 c);
+t_bool	c_isuppercase(t_i32 c);
+t_bool	c_islowercase(t_i32 c);
 
 #endif
