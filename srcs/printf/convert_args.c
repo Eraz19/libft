@@ -6,46 +6,73 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:03:08 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 22:02:29 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 16:39:16 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "printf.h"
 
-static t_dstr	str_from_args_str(t_args_types value, t_rule_content *ctnt)
+/**
+ * str_from_args_str - Interpret printf args as string and convert to t_dstr.
+ *
+ * @param value The argument value
+ * @param content The rule content defining the interpretation of the args
+ * @return The result of the interpretation of the string arg
+ *
+ * @error: On allocation failure, returns a NULL t_dstr (errno ENOMEM).
+ */
+static t_dstr	str_from_args_str(t_args_types value, t_rule_content *content)
 {
 	if (value._ptr == NULL)
 	{
-		if (ctnt->prec >= 0 && ctnt->prec < 6)
-			ctnt->prec = 0;
+		if (content->prec >= 0 && content->prec < 6)
+			content->prec = 0;
 		return (dstr_c(cstr("(null)")));
 	}
 	return (dstr_c(cstr(value._ptr)));
 }
 
-static t_dstr	str_from_args_ptr(t_args_types value, t_rule_content *ctnt)
+/**
+ * str_from_args_ptr - Interpret printf args as pointer and convert to t_dstr.
+ *
+ * @param value The argument value
+ * @param content The rule content defining the interpretation of the args
+ * @return The result of the interpretation of the pointer arg
+ *
+ * @error: On allocation failure, returns a NULL t_dstr (errno ENOMEM).
+ */
+static t_dstr	str_from_args_ptr(t_args_types value, t_rule_content *content)
 {
 	if (value._addr == NULL)
 		return (dstr_c(cstr("(nil)")));
-	ctnt->out = out_alt;
+	content->out = out_alt;
 	return (str_from_long((t_i64)value._addr, cstr(CHARSET_HEX), FALSE));
 }
 
-t_dstr	str_from_args(t_args_types value, t_rule_content *ctnt)
+/**
+ * str_from_args - Interpret printf args based on rule and convert to t_dstr.
+ *
+ * @param value The argument value
+ * @param content The rule content defining the interpretation of the args
+ * @return The result of the interpretation of the args
+ *
+ * @error: On allocation failure, returns a NULL t_dstr (errno ENOMEM).
+ */
+t_dstr	str_from_args(t_args_types value, t_rule_content *content)
 {
-	if (ctnt->type == _char)
+	if (content->type == _char)
 		return (str_from_char((t_i8)value._char));
-	else if (ctnt->type == _str)
-		return (str_from_args_str(value, ctnt));
-	else if (ctnt->type == _dec || ctnt->type == _int)
+	else if (content->type == _str)
+		return (str_from_args_str(value, content));
+	else if (content->type == _dec || content->type == _int)
 		return (str_from_int(value._int, cstr(CHARSET_DEC), TRUE));
-	else if (ctnt->type == _usign)
+	else if (content->type == _usign)
 		return (str_from_int(value._int, cstr(CHARSET_DEC), FALSE));
-	else if (ctnt->type == _hex)
+	else if (content->type == _hex)
 		return (str_from_int(value._int, cstr(CHARSET_HEX), FALSE));
-	else if (ctnt->type == _HEX)
+	else if (content->type == _HEX)
 		return (str_from_int(value._int, cstr(CHARSET_UHEX), FALSE));
-	if (ctnt->type == _ptr)
-		return (str_from_args_ptr(value, ctnt));
+	if (content->type == _ptr)
+		return (str_from_args_ptr(value, content));
 	return (str_from_char('%'));
 }

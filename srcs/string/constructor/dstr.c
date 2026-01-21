@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:37:01 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/15 12:03:15 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:33:19 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * dstr_d - Duplicates a dynamic string structure
@@ -18,8 +18,8 @@
  * @param str The t_dstr structure to duplicate
  * @return A new t_dstr containing a copy of the string
  *
- * NULL Handling: If str.s is NULL, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If str.s is NULL, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	dstr_d(t_dstr str)
 {
@@ -44,8 +44,8 @@ t_dstr	dstr_d(t_dstr str)
  * @param size The size of the buffer to allocate
  * @return The newly created t_dstr initialized as an empty string
  *
- * Note: If size = 0, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If size = 0, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	dstr_s(size_t size)
 {
@@ -68,8 +68,8 @@ t_dstr	dstr_s(size_t size)
  * @param str The t_cstr structure to convert
  * @return A new t_dstr containing a copy of the string
  *
- * NULL Handling: If str.s is NULL, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If str.s is NULL, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	dstr_c(t_cstr str)
 {

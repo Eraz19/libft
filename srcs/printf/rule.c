@@ -6,13 +6,19 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 11:31:11 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 22:09:54 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:17:38 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "printf.h"
 
-void	ft_free_rule_content(void *content)
+/**
+ * free_rule_content - Frees the memory allocated for a rule content structure
+ *
+ * @param content Pointer to the rule content to free
+ * @return void
+ */
+void	free_rule_content(void *content)
 {
 	((t_rule_content *)content)->type = _default;
 	((t_rule_content *)content)->prec = -1;
@@ -24,6 +30,14 @@ void	ft_free_rule_content(void *content)
 	free(content);
 }
 
+/**
+ * rule - Creates and initializes a new rule structure
+ *
+ * @param void
+ * @return Pointer to the newly created rule
+ *
+ * @error: On allocation failure, returns NULL (errno ENOMEM).
+ */
 t_rule	*rule(void)
 {
 	t_rule			*rule;
@@ -41,6 +55,6 @@ t_rule	*rule(void)
 	content->len = 0;
 	rule = (t_rule *)node(content);
 	if (rule == NULL)
-		return (ft_free_rule_content(&content), NULL);
+		return (free_rule_content(&content), NULL);
 	return (rule);
 }

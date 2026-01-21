@@ -6,14 +6,24 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 10:31:26 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/20 19:31:13 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 16:52:59 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdio.h>
+#include "printf.h"
+#include <stdarg.h>
 
-static t_dstr	append_rule_result(t_dstr *res, t_rule *rule, va_list ap)
+/**
+ * append_rule_result - Appends the formatted output to the result based on rule
+ *
+ * @param res Pointer to the result string
+ * @param rule Pointer to the rule to process
+ * @param ap The variable argument list
+ * @return void
+ *
+ * @error: On allocation failure, sets res->s to NULL (errno ENOMEM).
+ */
+static void	append_rule_result(t_dstr *res, t_rule *rule, va_list ap)
 {
 	t_dstr			out;
 	t_args_types	args;
@@ -33,12 +43,21 @@ static t_dstr	append_rule_result(t_dstr *res, t_rule *rule, va_list ap)
 	out = str_from_args(args, rule->content);
 	out = apply_flags(out, rule->content);
 	if (out.s == NULL)
-		return (dstr_c(cstr(NULL)));
+		*res = out;
 	*res = str_insert(res, &out, res->len);
-	return (out);
 }
 
-static void	append_fmt_out_rule(t_dstr *res, t_cstr fmt_, size_t len)
+/**
+ * append_fmt_out_rule - Appends the non-format portion of the format string
+ *
+ * @param res Pointer to the result string
+ * @param fmt_ The current position in the format string
+ * @param len The length of the non-format portion to append
+ * @return void
+ *
+ * @error: On allocation failure, sets res->s to NULL (errno ENOMEM).
+ */
+static void	append_fmt(t_dstr *res, t_cstr fmt_, size_t len)
 {
 	t_dstr	sub_buf;
 
@@ -46,12 +65,20 @@ static void	append_fmt_out_rule(t_dstr *res, t_cstr fmt_, size_t len)
 	*res = str_insert(res, &sub_buf, res->len);
 }
 
+/** 
+ * print_result - Prints the final result and cleans up
+ *
+ * @param str The final result string to print
+ * @param rules Pointer to the rules list to free
+ * @param ap The variable argument list to end
+ * @return The length of the printed string
+ */
 static t_i32	print_result(t_dstr str, t_rules *rules, va_list ap)
 {
 	t_i32	len;
 
 	if (rules->nodes != NULL)
-		free_lst(rules, ft_free_rule_content);
+		free_lst(rules, free_rule_content);
 	str_print(cstr_d(str), STDOUT_FILENO);
 	len = (t_i32)str.len;
 	free_dstr(&str);
@@ -59,6 +86,13 @@ static t_i32	print_result(t_dstr str, t_rules *rules, va_list ap)
 	return (len);
 }
 
+/**
+ * ft_printf - Custom implementation of printf function
+ *
+ * @param fmt The format string
+ * @param ... Variable arguments to format (variadic)
+ * @return The number of characters printed
+ */
 t_i32	ft_printf(const t_i8 *fmt, ...)
 {
 	va_list	ap;
@@ -74,7 +108,7 @@ t_i32	ft_printf(const t_i8 *fmt, ...)
 	{
 		if (((t_rule *)rules.nodes)->content->type == _error)
 			return (print_result(res, &rules, ap));
-		append_fmt_out_rule(&res, fmt_, (size_t)str_findindex(fmt_, R_DEL));
+		append_fmt(&res, fmt_, (size_t)str_findindex(fmt_, R_DEL));
 		if (res.s == NULL)
 			return (print_result(res, &rules, ap));
 		fmt_ = str_findchr(fmt_, R_DEL);
@@ -82,8 +116,8 @@ t_i32	ft_printf(const t_i8 *fmt, ...)
 		if (res.s == NULL)
 			return (print_result(res, &rules, ap));
 		fmt_ = str_shift(fmt_, ((t_rule *)rules.nodes)->content->len + 1);
-		free_node(&rules, (t_node *)rules.nodes, ft_free_rule_content);
+		free_node(&rules, (t_node *)rules.nodes, free_rule_content);
 	}
-	append_fmt_out_rule(&res, fmt_, fmt_.len);
+	append_fmt(&res, fmt_, fmt_.len);
 	return (print_result(res, &rules, ap));
 }

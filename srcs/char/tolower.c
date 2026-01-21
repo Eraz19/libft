@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:01:21 by adouieb           #+#    #+#             */
-/*   Updated: 2025/12/28 16:18:40 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:57:39 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_types.h"
 
 /**
  * c_tolower - Converts an uppercase letter to lowercase

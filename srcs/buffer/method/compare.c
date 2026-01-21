@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:18:13 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/20 11:19:50 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:53:51 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_buffer.h"
 
 /**
  * buf_cmp - Compares two buffers

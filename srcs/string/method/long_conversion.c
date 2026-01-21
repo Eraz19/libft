@@ -6,11 +6,13 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:18:08 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 18:22:56 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:31:59 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_math.h"
+#include "libft_char.h"
+#include "libft_string.h"
 
 /**
  * is_overflow - Checks if adding a digit causes overflow for long
@@ -41,14 +43,14 @@ static t_bool	is_overflow(t_i64 current, t_i32 digit, t_i32 base, t_i32 sign)
  *
  * @param nptr The t_cstr containing the numeric string
  * @param base The character set representing the base
- *	rules for base:
- *	- No whitespace characters
- *	- No '+' or '-' signs
- *	- All characters must be unique
+ *     rules for base:
+ *         - No whitespace characters
+ *         - No '+' or '-' signs
+ *         - All characters must be unique
  * @return The converted long value
  *
- * NULL Handling: If nptr.s or base.s is NULL, returns 0.
- * Note: If base.len < 2, returns 0.
+ * @args: If nptr.s or base.s is NULL, returns 0.
+ *        If base.len < 2, returns 0.
  */
 t_bool	str_to_long(t_i64 *res, t_cstr nptr, t_cstr base)
 {
@@ -86,7 +88,7 @@ t_bool	str_to_long(t_i64 *res, t_cstr nptr, t_cstr base)
  * @param buf The buffer to write to
  * @return The updated buffer after conversion
  *
- * Error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
+ * @error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
  */
 static t_dbuf	str_from_ulong_(t_u64 n, t_cstr base, t_dbuf buf)
 {
@@ -108,7 +110,7 @@ static t_dbuf	str_from_ulong_(t_u64 n, t_cstr base, t_dbuf buf)
  * @param buf The buffer to write to
  * @return The updated buffer after conversion
  *
- * Error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
+ * @error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
  */
 static t_dbuf	str_from_long_(t_i64 n, t_cstr base, t_dbuf buf)
 {
@@ -138,9 +140,9 @@ static t_dbuf	str_from_long_(t_i64 n, t_cstr base, t_dbuf buf)
  * @param sign Whether to treat n as signed (TRUE) or unsigned (FALSE)
  * @return A new t_dstr containing the string representation
  *
- * NULL Handling: If base.s is NULL, returns a NULL t_dstr.
- * Note: If base.len < 2, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If base.s is NULL, returns a NULL t_dstr.
+ *        If base.len < 2, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_from_long(t_i64 n, t_cstr base, t_bool sign)
 {

@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:04:38 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/08 14:46:18 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:31:15 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * str_cmp - Compares two strings (including NULL strings)

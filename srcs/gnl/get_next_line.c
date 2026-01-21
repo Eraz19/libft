@@ -6,15 +6,20 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 17:26:03 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/21 10:40:54 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 16:30:45 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_gnl.h"
-#include "libft_buffer.h"
-#include "libft_string.h"
-#include <stdio.h>
+#include "gnl.h"
 
+/**
+ * on_failure - Handles cleanup on read failure
+ *
+ * @param readers The list of current readers
+ * @param reader The reader that encountered the failure
+ * @param buf The buffer containing data from previous reads to free
+ * @return A NULL t_dstr indicating failure
+ */
 t_dstr	on_failure(t_readers *readers, t_reader *reader, t_dbuf *buf)
 {
 	free_node(readers, (t_node *)reader, free_reader_content);
@@ -22,12 +27,27 @@ t_dstr	on_failure(t_readers *readers, t_reader *reader, t_dbuf *buf)
 	return (dstr_s(0));
 }
 
+/**
+ * on_file_end - Handles cleanup on end-of-file
+ *
+ * @param readers The list of current readers
+ * @param reader The reader that reached EOF
+ * @param buf The buffer containing data from previous reads to convert
+ * @return A t_dstr containing any remaining data before EOF
+ */
 t_dstr	on_file_end(t_readers *readers, t_reader *reader, t_dbuf *buf)
 {
 	free_node(readers, (t_node *)reader, free_reader_content);
 	return (str_from_buf(buf));
 }
 
+/**
+ * merge_buffer - Merges data from the reader's buffer into the output buffer
+ *
+ * @param reader_content Pointer to the reader content
+ * @param buf Pointer to the output buffer to merge into
+ * @return The updated output buffer
+ */
 t_dbuf	merge_buffer(t_reader_content *reader_content, t_dbuf *buf)
 {
 	t_cbuf	buf_;
@@ -46,6 +66,12 @@ t_dbuf	merge_buffer(t_reader_content *reader_content, t_dbuf *buf)
 	return (*buf);
 }
 
+/**
+ * need_to_read - Determines if more data needs to be read from the file
+ *
+ * @param reader_content Pointer to the reader content
+ * @return TRUE if more data needs to be read, FALSE otherwise
+ */
 t_bool	need_to_read(t_reader_content *reader_content)
 {
 	t_bool	is_first_read;
@@ -56,6 +82,17 @@ t_bool	need_to_read(t_reader_content *reader_content)
 	return (is_first_read || merged_all);
 }
 
+/**
+
+ * get_next_line - Reads the next line from the given file descriptor
+ *
+ * @param fd The file descriptor to read from
+ * @param readers The list of current readers
+ * @return A t_dstr containing the next line
+ *
+ * @error: On reading failure, returns a NULL t_dstr (errno EBADF/EIO/EAGAIN).
+ *         On allocation failure, returns a NULL t_dstr (errno ENOMEM).
+ */
 t_dstr	get_next_line(t_u32 fd, t_readers *readers)
 {
 	t_dbuf				buf;

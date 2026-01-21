@@ -6,20 +6,36 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 23:45:50 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/21 10:27:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:17:51 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_gnl.h"
+#include "gnl.h"
 
-static t_bool	is_fd_reader(void *content, void *context)
+/**
+ * is_fd_reader - Predicate to check if a reader matches the given fd
+ *
+ * @param content The reader content to check
+ * @param fd Pointer to the fd to match against
+ * @return TRUE if matches, FALSE otherwise
+ */
+static t_bool	is_fd_reader(void *content, void *fd)
 {
-	t_i32	fd;
+	t_i32	fd_;
 
-	fd = *(t_i32 *)context;
-	return (((t_reader_content *)content)->fd == fd);
+	fd_ = *(t_i32 *)fd;
+	return (((t_reader_content *)content)->fd == fd_);
 }
 
+/**
+ * select_reader - Selects or creates a reader for the given fd
+ *
+ * @param readers The list of current readers
+ * @param fd The file descriptor to select
+ * @return Pointer to the selected or newly created reader
+ *
+ * @error: On allocation failure, returns NULL (errno ENOMEM).
+ */
 t_reader	*select_reader(t_readers *readers, t_u32 fd)
 {
 	size_t		i;
@@ -45,6 +61,11 @@ t_reader	*select_reader(t_readers *readers, t_u32 fd)
 	return (new_reader);
 }
 
+/**
+ * free_reader_content - Frees the content of a reader
+ *
+ * @param content Pointer to the reader content to free
+ */
 void	free_reader_content(void *content)
 {
 	size_t	i;
@@ -57,6 +78,12 @@ void	free_reader_content(void *content)
 		((t_reader_content *)content)->buf[i++] = 0;
 }
 
+/**
+ * read_file - Reads data from the file descriptor into the reader's buffer
+ *
+ * @param reader_content Pointer to the reader content
+ * @param fd The file descriptor to read from
+ */
 void	read_file(t_reader_content *reader_content, t_u32 fd)
 {
 	reader_content->read_count = read((t_i32)fd, reader_content->buf, BUF_SIZE);

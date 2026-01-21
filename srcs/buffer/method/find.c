@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 10:59:22 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/20 12:41:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:54:09 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_buffer.h"
 
 /**
  * buf_findindex - Locates the first occurrence of bytes in a buffer
@@ -25,7 +25,7 @@
  * @param bytes The bytes to locate
  * @return The index of the first occurrence, or -1
  *
- * NULL Handling: If buf.data or bytes.data is NULL, returns -1.
+ * @args: If buf.data or bytes.data is NULL, returns -1.
  */
 ssize_t	buf_findindex(t_cbuf buf, t_cbuf bytes)
 {

@@ -6,12 +6,21 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 15:53:51 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 22:05:12 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:44:48 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "printf.h"
 
+/**
+ * apply_flag_altout - Applies the alternate output flag ('#') when appropriate
+ *
+ * @param out The current output string
+ * @param content The rule content containing formatting options
+ * @return The modified output string with alternate formatting applied
+ *
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ */
 static t_dstr	apply_flag_altout(t_dstr out, t_rule_content *content)
 {
 	size_t	i;
@@ -36,6 +45,15 @@ static t_dstr	apply_flag_altout(t_dstr out, t_rule_content *content)
 	return (out);
 }
 
+/**
+ * apply_flag_prec - Applies the precision flag to the output string
+ *
+ * @param out The current output string
+ * @param content The rule content containing formatting options
+ * @return The modified output string with precision applied
+ *
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ */
 static t_dstr	apply_flag_prec(t_dstr out, t_rule_content *content)
 {
 	t_rule_type	rule_type;
@@ -60,6 +78,15 @@ static t_dstr	apply_flag_prec(t_dstr out, t_rule_content *content)
 	return (out);
 }
 
+/**
+ * apply_flag_pad - Applies padding to the output string based on width
+ *
+ * @param out The current output string
+ * @param content The rule content containing formatting options
+ * @return The modified output string with padding applied
+ *
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ */
 static t_dstr	apply_flag_pad(t_dstr out, t_rule_content *content)
 {
 	t_dstr		pad;
@@ -89,6 +116,15 @@ static t_dstr	apply_flag_pad(t_dstr out, t_rule_content *content)
 	return (out);
 }
 
+/**
+ * apply_flag_sign - Applies sign flags ('+' or ' ') to the output string
+ *
+ * @param out The current output string
+ * @param content The rule content containing formatting options
+ * @return The modified output string with sign applied
+ *
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ */
 static t_dstr	apply_flag_sign(t_dstr out, t_rule_content *content)
 {
 	t_bool	is_neg;
@@ -103,6 +139,15 @@ static t_dstr	apply_flag_sign(t_dstr out, t_rule_content *content)
 	return (out);
 }
 
+/**
+ * apply_flags - Applies all relevant flags to the output string
+ *
+ * @param str The current output string
+ * @param content The rule content containing formatting options
+ * @return The modified output string with all flags applied
+ *
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ */
 t_dstr	apply_flags(t_dstr str, t_rule_content *content)
 {
 	t_dstr	out;

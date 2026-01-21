@@ -12,7 +12,7 @@
 
 #include "libft_test.h"
 #include "libft.h"
-#include <stdio.h>
+
 
 // Override TEST_ASSERT and TEST_SUMMARY to use char-specific counters
 #undef TEST_ASSERT

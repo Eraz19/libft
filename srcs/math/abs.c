@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 14:46:42 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/01 19:15:54 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:46:12 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_types.h"
 
 /**
  * abs_i - Computes the absolute value of a signed integer

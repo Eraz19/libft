@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:30:31 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 18:24:00 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 16:32:23 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * str_realloc - Reallocates a dynamic string if needed
@@ -20,15 +20,15 @@
  * To keep a copy of the string, first duplicate it before.
  * Always reassign the result:
  *     t_dstr str_copy = dstr_d(original_str);
- *     str_copy = str_realloc(&str_copy, new_size);  // ✓ Correct usage
- *     original_str                                  // ✓ remains valid
+ *     str_copy = str_realloc(&str_copy, new_size); // ✓ Correct usage
+ *     original_str                                 // ✓ remains valid
  *
  * @param str The pointer to the t_dstr to reallocate (always freed)
  * @param new_size The new size required
  * @return A new t_dstr containing the reallocation of the original string
  *
- * Note: If new_size = 0, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If new_size = 0, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  *
  */
 static t_dstr	str_realloc(t_dstr *str, size_t new_size)
@@ -82,11 +82,10 @@ static void	str_shift_right(t_dstr res, size_t i, size_t origin_len, size_t gap)
  * @param i The position to insert at (clamped to str->len if too large)
  * @return A t_dstr with the inserted content
  *
- * NULL Handling: If both str, str->s and insrt.s are NULL, returns a NULL
- *                    t_dstr.
- *                If only str and str->s is NULL, returns insrt.
- *                If only insrt.s is NULL, returns str untouched.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If both str, str->s and insrt.s are NULL, returns a NULL t_dstr.
+ *        If only str and str->s is NULL, returns insrt.
+ *        If only insrt.s is NULL, returns str untouched.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_insertc(t_dstr *str, t_cstr insrt, size_t i)
 {
@@ -125,20 +124,20 @@ t_dstr	str_insertc(t_dstr *str, t_cstr insrt, size_t i)
  * Always reassign the result:
  *     t_dstr str_copy = dstr_d(original_str);
  *     t_dstr insert_str = dstr_d(string_to_insert);
- *     str_copy = str_insert(&str_copy, &insert_str, i);  // ✓ Correct usage
- *     original_str                                       // ✓ remains valid
- *     string_to_insert                                   // ✓ remains valid
+ *     str_copy = str_insert(&str_copy, &insert_str, i); // ✓ Correct usage
+ *     original_str                                      // ✓ remains valid
+ *     string_to_insert                                  // ✓ remains valid
  *
  * @param str The pointer to the t_dstr to insert into (may be freed if realloc)
  * @param insrt The pointer to the t_dstr to insert (always freed)
  * @param i The position to insert at (clamped to str->len if too large)
  * @return A t_dstr with the inserted content
  *
- * NULL Handling: If both str, insert, str->s and insrt.s are NULL, returns a
- *                    NULL t_dstr.
- *                If only str and str->s is NULL, returns insrt.
- *                If only insert and insrt.s is NULL, returns str untouched.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If both str, insert, str->s and insrt.s are NULL, returns a NULL
+ *            t_dstr.
+ *        If only str and str->s is NULL, returns insrt.
+ *        If only insert and insrt.s is NULL, returns str untouched.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_insert(t_dstr *str, t_dstr *insrt, size_t i)
 {

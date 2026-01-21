@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:18:28 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 17:31:43 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:50:02 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_list.h"
 
 /**
  * lst_foreach - Applies a function to each node of a list for side effects
@@ -18,7 +18,7 @@
  * @param lst The list to iterate over
  * @param f The function to apply to each node's content
  * 
- * Note: If lst.nodes is NULL, does nothing.
+ * @args: If lst.nodes is NULL, does nothing.
  */
 void	lst_foreach(t_lst lst, void (*f)(void *))
 {
@@ -40,17 +40,16 @@ void	lst_foreach(t_lst lst, void (*f)(void *))
  * To keep a copy of the list, first duplicate it before. 
  * Always reassign the result:
  *     t_lst lst = lst_l(original_lst);
- *     lst = lst_map(&lst, transform, del);  // ✓ Correct usage
- *     original_lst                          // ✓ remains valid
+ *     lst = lst_map(&lst, transform, del); // ✓ Correct usage
+ *     original_lst                         // ✓ remains valid
  *
  * @param lst The list to map over (always freed)
  * @param f The function to apply to each node's content
  * @param del The function to free node content
  * @return A new list with transformed nodes
  * 
- * NULL Handling: If lst, lst->nodes, f, or del is NULL, returns an empty list.
- * Error: If allocation fails, returns a NULL list (errno ENOMEM).
- *
+ * @args: If lst, lst->nodes, f, or del is NULL, returns a NULL list.
+ * @error: If allocation fails, returns a NULL list (errno ENOMEM).
  */
 t_lst	lst_map(t_lst *lst, void *(*f)(void *), void (*del)(void *))
 {

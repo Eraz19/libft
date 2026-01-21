@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:19:11 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 15:29:33 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:27:50 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * str_split_ - Splits a string into substrings based on a delimiter
@@ -20,7 +20,7 @@
  * @param c The delimiter character
  * @return The buffer with split substrings
  *
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 static t_dbuf	str_split_(t_dbuf res, t_cstr str, t_i8 c)
 {
@@ -81,8 +81,8 @@ static t_u32	str_count_words(t_cstr str, t_i8 c)
  * @param c The delimiter character
  * @return A t_dbuf containing an array of t_dstr substrings
  *
- * NULL Handling: If str.s is NULL, returns a NULL t_dbuf.
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @args: If str.s is NULL, returns a NULL t_dbuf.
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	str_split(t_cstr str, t_i8 c)
 {

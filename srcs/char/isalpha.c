@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 15:14:23 by adouieb           #+#    #+#             */
-/*   Updated: 2025/12/28 16:20:49 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:56:46 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_types.h"
 
 /**
  * c_isalpha - Checks if a character is alphabetic

@@ -6,11 +6,13 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:18:08 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 18:42:28 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:32:10 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_math.h"
+#include "libft_char.h"
+#include "libft_string.h"
 
 /**
  * is_overflow - Checks if adding a digit causes overflow for int
@@ -42,14 +44,14 @@ static t_bool	is_overflow(t_i32 current, t_i32 digit, t_i32 base, t_i32 sign)
  * @param res Pointer to store the result converted integer value
  * @param nptr The t_cstr containing the numeric string
  * @param base The character set representing the base
- *	rules for base:
- *	- No whitespace characters
- *	- No '+' or '-' signs
- *	- All characters must be unique
+ *     rules for base:
+ *         - No whitespace characters
+ *         - No '+' or '-' signs
+ *         - All characters must be unique
  * @return TRUE on success, FALSE on overflow or error
  *
- * NULL Handling: If nptr.s or base.s is NULL, returns FALSE.
- * Note: If base.len < 2, returns FALSE.
+ * @args: If nptr.s or base.s is NULL, returns FALSE.
+ *        If base.len < 2, returns FALSE.
  */
 t_bool	str_to_int(t_i32 *res, t_cstr nptr, t_cstr base)
 {
@@ -87,7 +89,7 @@ t_bool	str_to_int(t_i32 *res, t_cstr nptr, t_cstr base)
  * @param buf The buffer to write to
  * @return The updated buffer after conversion
  *
- * Error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
+ * @error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
  */
 static t_dbuf	str_from_uint_(t_u32 n, t_cstr base, t_dbuf buf)
 {
@@ -109,7 +111,7 @@ static t_dbuf	str_from_uint_(t_u32 n, t_cstr base, t_dbuf buf)
  * @param buf The buffer to write to
  * @return The updated buffer after conversion
  *
- * Error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
+ * @error: If allocation fails during, returns NULL dbuf (errno ENOMEM).
  */
 static t_dbuf	str_from_int_(t_i32 n, t_cstr base, t_dbuf buf)
 {
@@ -139,9 +141,9 @@ static t_dbuf	str_from_int_(t_i32 n, t_cstr base, t_dbuf buf)
  * @param sign Whether to treat n as signed (TRUE) or unsigned (FALSE)
  * @return A new t_dstr containing the string representation
  *
- * NULL Handling: If base.s is NULL, returns a NULL t_dstr.
- * Note: If base.len < 2, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If base.s is NULL, returns a NULL t_dstr.
+ *        If base.len < 2, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_from_int(t_i32 n, t_cstr base, t_bool sign)
 {

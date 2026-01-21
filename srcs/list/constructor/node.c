@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 18:12:15 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/16 12:32:26 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:48:29 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_list.h"
 
 /**
  * node - Creates a new list node
@@ -18,8 +18,8 @@
  * @param content The pointer to the content to store in the node
  * @return The newly created node
  *
- * NULL Handling: If content is NULL, returns NULL.
- * Error: If allocation fails, returns NULL (errno ENOMEM).
+ * @args: If content is NULL, returns NULL.
+ * @error: If allocation fails, returns NULL (errno ENOMEM).
  */
 t_node	*node(void *content)
 {

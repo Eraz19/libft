@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 16:27:51 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/15 12:16:35 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:52:52 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_buffer.h"
 
 /**
  * dbuf_d - Duplicates a dynamic buffer structure
@@ -18,8 +18,8 @@
  * @param buf The t_dbuf structure to duplicate
  * @return A new t_dbuf containing a copy of the data
  *
- * NULL Handling: If buf.data is NULL, returns a NULL t_dbuf.
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @args: If buf.data is NULL, returns a NULL t_dbuf.
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	dbuf_d(t_dbuf buf)
 {
@@ -41,8 +41,8 @@ t_dbuf	dbuf_d(t_dbuf buf)
  * @param size The size in bytes to allocate (elements * type_size)
  * @return The newly created t_dbuf initialized to zero
  *
- * Note: If size = 0, returns a NULL t_dbuf.
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @args: If size = 0, returns a NULL t_dbuf.
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	dbuf_s(size_t size)
 {
@@ -69,8 +69,8 @@ t_dbuf	dbuf_s(size_t size)
  * @param buf The t_cbuf structure to convert
  * @return A new t_dbuf containing a copy of the data
  *
- * NULL Handling: If buf.data is NULL, returns a NULL t_dbuf.
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @args: If buf.data is NULL, returns a NULL t_dbuf.
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	dbuf_c(t_cbuf buf)
 {

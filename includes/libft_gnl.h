@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 21:53:10 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/21 10:44:34 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:04:29 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define LIBFT_GNL_H
 
 # include "libft_list.h"
-# include "libft_types.h"
 # include "libft_string.h"
 
 typedef struct t_reader_content
@@ -31,10 +30,8 @@ typedef struct t_reader
 }	t_reader;
 typedef t_lst	t_readers;
 
-t_dstr		get_next_line(t_u32 fd, t_readers *readers);
+t_dstr	get_next_line(t_u32 fd, t_readers *readers);
 
-void		free_reader_content(void *content);
-t_reader	*select_reader(t_readers *readers, t_u32 fd);
-void		read_file(t_reader_content *reader_content, t_u32 fd);
+void	free_reader_content(void *content);
 
 #endif

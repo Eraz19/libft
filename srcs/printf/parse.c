@@ -6,12 +6,19 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:48:42 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/20 12:41:51 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:08:50 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "printf.h"
+#include "libft_char.h"
 
+/**
+ * parse_rule_type - Parses the rule type from a character
+ *
+ * @param c The character representing the rule type
+ * @return The corresponding t_rule_type enum value
+ */
 static t_rule_type	parse_rule_type(t_i8 c)
 {
 	if (c == 'c')
@@ -36,6 +43,13 @@ static t_rule_type	parse_rule_type(t_i8 c)
 		return (_error);
 }
 
+/**
+ * parse_flags - Parses formatting flags from the format string
+ *
+ * @param content The rule content to populate with flags
+ * @param c The current character to parse
+ * @return TRUE if a flag was parsed, FALSE otherwise
+ */
 static t_bool	parse_flags(t_rule_content *content, t_i8 c)
 {
 	if (c == '0' || c == '-' || c == ' ' || c == '+' || c == '#')
@@ -56,11 +70,25 @@ static t_bool	parse_flags(t_rule_content *content, t_i8 c)
 		return (FALSE);
 }
 
+/**
+ * is_parsable - Checks if the current character can be parsed
+ *
+ * @param content The rule content containing formatting options
+ * @param c The current character to check
+ * @return TRUE if the character can be parsed, FALSE otherwise
+ */
 static t_bool	is_parsable(t_rule_content *content, const t_i8 c)
 {
 	return (c != '\0' && content->type != _error);
 }
 
+/**
+ * parse_rule - Parses a single formatting rule from the format string
+ *
+ * @param rule Pointer to the rule to populate
+ * @param fmt The format string starting after the '%'
+ * @return The populated rule
+ */
 static t_rule	*parse_rule(t_rule *rule, t_cstr fmt)
 {
 	size_t			i;
@@ -85,6 +113,14 @@ static t_rule	*parse_rule(t_rule *rule, t_cstr fmt)
 	return (rule);
 }
 
+/**
+ * ft_parse_fmt - Parses the format string and extracts formatting rules
+ *
+ * @param fmt The format string to parse
+ * @return A list of parsed rules
+ *
+ * @error: On allocation failure, returns a NULL list (errno ENOMEM).
+ */
 t_rules	ft_parse_fmt(t_cstr fmt)
 {
 	t_rules	rules;
@@ -98,7 +134,7 @@ t_rules	ft_parse_fmt(t_cstr fmt)
 		{
 			new_rule = rule();
 			if (new_rule == NULL)
-				return (free_lst(&rules, ft_free_rule_content), rules);
+				return (free_lst(&rules, free_rule_content), rules);
 			new_rule = parse_rule(new_rule, str_shift(fmt, 1));
 			lst_insert(&rules, (t_node *)new_rule, rules.size);
 			if (new_rule->content->type == _error)

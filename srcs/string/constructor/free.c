@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 16:32:27 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/15 12:21:17 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:33:54 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
  * free_dstrs - Frees an array of dynamic string structures
  *
  * @param str_buf The pointer to t_dbuf containing an array of t_dstr to free
+ * @return void
  */
 void	free_dstrs(t_dbuf *str_buf)
 {
@@ -33,6 +34,7 @@ void	free_dstrs(t_dbuf *str_buf)
  * free_dstr - Frees a dynamic string structure and clears its memory
  *
  * @param str Pointer to the t_dstr to free
+ * @return void
  */
 void	free_dstr(t_dstr *str)
 {

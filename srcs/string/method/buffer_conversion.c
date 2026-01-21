@@ -6,12 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 23:38:57 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/20 20:30:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:32:25 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdio.h>
+#include "libft_string.h"
 
 /**
  * str_from_buf - Converts a dynamic buffer to a dynamic string
@@ -26,8 +25,8 @@
  * @param buf The pointer to the dynamic buffer to convert (always freed)
  * @return A newly allocated t_dstr with the buf content and null terminator.
  *
- * NULL Handling: If buf->data is NULL, returns a NULL t_dstr.
- * Error handling: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If buf->data is NULL, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_from_buf(t_dbuf *buf)
 {

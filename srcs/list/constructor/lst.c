@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:02:59 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 18:16:08 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:48:05 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_list.h"
 
 /**
  * lst_l - Creates a new list by copying an existing list
@@ -20,8 +20,8 @@
  * @param del The function to delete the content in case of failure
  * @return The newly created list
  *
- * NULL Handling: If list.nodes, copy, or del is NULL, returns an empty list.
- * Error: If allocation fails, returns an empty list (errno ENOMEM).
+ * @args: If list.nodes, copy, or del is NULL, returns a NULL list.
+ * @error: If allocation fails, returns a NULL list (errno ENOMEM).
  */
 t_lst	lst_l(t_lst list, void *(*copy)(void *), void (*del)(void *))
 {
@@ -52,7 +52,7 @@ t_lst	lst_l(t_lst list, void *(*copy)(void *), void (*del)(void *))
  * lst_ - Creates a new empty list
  *
  * @param void 
- * @return The newly created empty list
+ * @return The newly created NULL list to be populated
  */
 t_lst	lst_(void)
 {
@@ -69,7 +69,7 @@ t_lst	lst_(void)
  * @param node The first node of the list
  * @return The newly created list
  *
- * NULL Handling: If node is NULL, returns an NULL list.
+ * @args: If node is NULL, returns an NULL list.
  */
 t_lst	lst_n(t_node *node)
 {

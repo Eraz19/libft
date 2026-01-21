@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:20:50 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/12 14:13:20 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:30:03 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * str_foreach - Applies a function to each element of a string for side effects
@@ -19,7 +19,7 @@
  * @param f The function to apply to each character (with index)
  * @return void
  *
- * NULL Handling: Does nothing if str.s is NULL t_cstr or f is NULL
+ * @args: Does nothing if str.s is NULL t_cstr or f is NULL.
  */
 void	str_foreach(t_cstr str, void (*f)(t_u32, t_i8))
 {
@@ -40,15 +40,15 @@ void	str_foreach(t_cstr str, void (*f)(t_u32, t_i8))
  * To keep a copy of the string, first duplicate it before.
  * Always reassign the result:
  *     t_dstr str_copy = dstr_d(original_str);
- *     str_copy = str_map(&str_copy, transform_func);  // ✓ Correct usage
- *     original_str                                    // ✓ remains valid
+ *     str_copy = str_map(&str_copy, transform_func); // ✓ Correct usage
+ *     original_str                                   // ✓ remains valid
  *
  * @param str The pointer to the t_dstr to map over (always freed)
  * @param f The function to apply to each character (with index)
  * @return A new t_dstr with the transformed characters
  *
- * NULL Handling: if str.s is NULL or f is NULL, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args: If str.s is NULL or f is NULL, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_map(t_dstr *str, t_i8 (*f)(t_u32, t_i8))
 {

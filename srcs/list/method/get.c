@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:22:39 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/20 12:42:17 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:49:17 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_list.h"
 
 /**
  * get - Returns the node at the specified index in a list
@@ -19,8 +19,8 @@
  * @param index The index of the node to retrieve
  * @return The node at the specified index
  *
- * NULL Handling: if lst.nodes is NULL, returns NULL.
- * Note: If index is out of bounds (>= lst.size), returns NULL.
+ * @args: If lst.nodes is NULL, returns NULL.
+ *        If index is out of bounds (>= lst.size), returns NULL.
  */
 t_node	*get(t_lst lst, size_t index)
 {
@@ -42,9 +42,9 @@ t_node	*get(t_lst lst, size_t index)
  * @param cmp The comparison function to determine a match
  * @param context The context containing the data to compare against
  * @return The list of nodes that matches the condition or a NULL list if no
- *			match found
+ *		       match found
  *
- * NULL Handling: if lst.nodes or cmp is NULL, returns a NULL list.
+ * @args: If lst.nodes or cmp is NULL, returns a NULL list.
  */
 t_lst	filter(t_lst lst, t_bool (*cmp)(void *, void *), void *context)
 {

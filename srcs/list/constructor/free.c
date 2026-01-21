@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 16:57:38 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/20 19:30:42 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:46:44 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_list.h"
 
 /**
  * free_node - Deletes and frees a node of a list
@@ -19,8 +19,8 @@
  * @param node The node pointer to delete
  * @param del Function to delete the content of the node
  *
- * NULL Handling: If lst or del is NULL, does nothing.
- * Note: If index is out of bounds, does nothing.
+ * @args: If lst or del is NULL, does nothing.
+ *        If index is out of bounds, does nothing.
  */
 void	free_node(t_lst *lst, t_node *node, void (*del)(void*))
 {
@@ -48,7 +48,7 @@ void	free_node(t_lst *lst, t_node *node, void (*del)(void*))
  * @param lst The list from which to delete the nodes
  * @param del Function to delete the content of a node
  *
- * NULL Handling: If lst, lst.nodes or del is NULL, does nothing.
+ * @args: If lst, lst.nodes or del is NULL, does nothing.
  */
 void	free_lst(t_lst *lst, void (*del)(void*))
 {

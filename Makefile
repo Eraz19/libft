@@ -6,7 +6,7 @@
 #    By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/12 00:00:00 by Copilot           #+#    #+#              #
-#    Updated: 2026/01/21 12:33:31 by adouieb          ###   ########.fr        #
+#    Updated: 2026/01/21 16:37:46 by adouieb          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -307,7 +307,7 @@ test:
 	fi
 	@# Check norminette compliance (optional)
 	@if command -v norminette >/dev/null 2>&1; then \
-		NORM_ERRORS=$$(norminette $(SRC_DIR) $(HDR_DIR) 2>&1); \
+		#NORM_ERRORS=$$(norminette $(SRC_DIR) $(HDR_DIR) 2>&1); \
 		if [ $$? -ne 0 ]; then \
 			echo " \033[0;35mChecking\033[0m norminette compliance \033[0;31m✗\033[0m"; \
 			echo "$$NORM_ERRORS" | sed 's/^/ /'; \

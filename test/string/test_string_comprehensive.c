@@ -6,13 +6,13 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 11:00:00 by Copilot           #+#    #+#             */
-/*   Updated: 2026/01/19 18:12:42 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 14:54:56 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft_test.h"
 #include "libft.h"
-#include <stdio.h>
+
 #include <string.h>
 #include <assert.h>
 
@@ -49,7 +49,7 @@ void test_cstr(void)
 {
 	TEST_START("cstr - constant string creation");
 	
-	// NULL handling
+	// @args:
 	t_cstr null_str = cstr(NULL);
 	TEST_ASSERT(null_str.s == NULL, "NULL input returns NULL s");
 	TEST_ASSERT(null_str.len == 0, "NULL input returns len=0");

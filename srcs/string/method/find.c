@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 16:11:13 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 11:42:04 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:31:03 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * str_findchr - Locates the first occurrence of a character in a string
@@ -19,7 +19,7 @@
  * @param c The character to locate
  * @return A t_cstr starting at the first occurrence, or NULL t_cstr
  *
- * NULL Handling: If str.s is NULL, returns NULL t_cstr.
+ * @args: If str.s is NULL, returns NULL t_cstr.
  */
 t_cstr	str_findchr(t_cstr str, t_i32 c)
 {
@@ -44,7 +44,7 @@ t_cstr	str_findchr(t_cstr str, t_i32 c)
  * @param c The character to locate
  * @return A t_cstr starting at the last occurrence, or NULL t_cstr
  *
- * NULL Handling: If str.s is NULL, returns NULL t_cstr
+ * @args: If str.s is NULL, returns NULL t_cstr
  */
 t_cstr	str_findlastchr(t_cstr str, t_i32 c)
 {
@@ -69,7 +69,7 @@ t_cstr	str_findlastchr(t_cstr str, t_i32 c)
  * @param c The character to locate
  * @return The index of the first occurrence, or -1
  *
- * NULL Handling: If str.s is NULL, returns -1.
+ * @args: If str.s is NULL, returns -1.
  */
 ssize_t	str_findindex(t_cstr str, t_i8 c)
 {
@@ -94,7 +94,7 @@ ssize_t	str_findindex(t_cstr str, t_i8 c)
  * @param c The character to locate
  * @return The index of the last occurrence, or -1
  *
- * NULL Handling: If str.s is NULL, returns -1.
+ * @args: If str.s is NULL, returns -1.
  */
 ssize_t	str_findlastindex(t_cstr str, t_i8 c)
 {
@@ -121,8 +121,8 @@ ssize_t	str_findlastindex(t_cstr str, t_i8 c)
  * @param sub The t_cstr to search for
  * @return A t_cstr starting at the first occurrence, or NULL t_cstr
  * 
- * NULL Handling: If str.s is NULL, returns NULL t_cstr.
- *                If sub.s is NULL, returns cstr at beginning of str.
+ * @args: If str.s is NULL, returns NULL t_cstr.
+ *        If sub.s is NULL, returns cstr at beginning of str.
  */
 t_cstr	str_findsub(t_cstr str, t_cstr sub)
 {

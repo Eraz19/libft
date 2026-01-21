@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/30 16:00:00 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 17:46:05 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:55:31 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_buffer.h"
 
 /**
  * buf_realloc - Reallocates a dynamic buffer if needed
@@ -20,8 +20,8 @@
  * To keep a copy of the buffer, first duplicate it before.
  * Always reassign the result:
  *     t_dbuf buf_copy = dbuf_d(original_buf);
- *     buf_copy = buf_realloc(buf_copy, new_size, mode);  // ✓ Correct usage
- *     original_buf                                       // ✓ remains valid
+ *     buf_copy = buf_realloc(buf_copy, new_size, mode); // ✓ Correct usage
+ *     original_buf                                      // ✓ remains valid
  *
  * @param buf The t_dbuf to reallocate (always freed)
  * @param new_size The new size required
@@ -30,8 +30,8 @@
  *    - x2 : Double the buffer size if needed
  * @return A new t_dbuf containing the reallocation of the original buffer
  *
- * Note: If new_size <= buf.size, returns buf untouched.
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @args: If new_size <= buf.size, returns buf untouched.
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  *
  */
 static t_dbuf	buf_realloc(t_dbuf *buf, size_t new_size, t_buf_strat mode)
@@ -97,15 +97,14 @@ static void	buf_shift_right(t_dbuf res, size_t i, size_t orig_len, size_t gap)
  * @param insrt The t_cbuf to insert
  * @param i The position to insert at (clamped to buf->len if too large)
  * @param mode The buffer strategy mode
- *    - E_  : Only allocate the exact needed size
- *    - x2_ : Double the buffer size if needed
+ *    - E  : Only allocate the exact needed size
+ *    - x2 : Double the buffer size if needed
  * @return A t_dbuf with the inserted content
  *
- * NULL Handling: If both buf, buf->data and insrt.data are NULL, returns a NULL
- *                    t_dbuf.
- *                If only buf and buf->data is NULL, returns insrt.
- *                If only insrt.data is NULL, returns buf untouched.
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @args: If both buf, buf->data and insrt.data are NULL, returns a NULL t_dbuf.
+ *        If only buf and buf->data is NULL, returns insrt.
+ *        If only insrt.data is NULL, returns buf untouched.
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	buf_insertc(t_dbuf *buf, t_cbuf insrt, size_t i, t_buf_strat mode)
 {
@@ -155,11 +154,11 @@ t_dbuf	buf_insertc(t_dbuf *buf, t_cbuf insrt, size_t i, t_buf_strat mode)
  *    - x2_ : Double the buffer size if needed
  * @return A t_dbuf with the inserted content
  *
- * NULL Handling: If both buf, insert, buf->data and insrt->data are NULL,
- *                    returns a NULL t_dbuf.
- *                If only buf and buf->data is NULL, returns insrt.
- *                If only insert and insrt->data is NULL, returns buf untouched.
- * Error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
+ * @args: If both buf, insert, buf->data and insrt->data are NULL, returns a
+ *            NULL t_dbuf.
+ *        If only buf and buf->data is NULL, returns insrt.
+ *        If only insert and insrt->data is NULL, returns buf untouched.
+ * @error: If allocation fails, returns a NULL t_dbuf (errno ENOMEM).
  */
 t_dbuf	buf_insert(t_dbuf *buf, t_dbuf *insrt, size_t i, t_buf_strat mode)
 {

@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:47:11 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 10:25:51 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:27:37 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * str_sub - Extracts a substring from a constant string
@@ -20,8 +20,8 @@
  * @param len The maximum length of the substring
  * @return A new t_dstr containing the substring
  *
- * NULL Handling: If str.s is NULL or start >= str.len, returns a NULL t_dstr.
- * Error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
+ * @args:: If str.s is NULL or start >= str.len, returns a NULL t_dstr.
+ * @error: If allocation fails, returns a NULL t_dstr (errno ENOMEM).
  */
 t_dstr	str_sub(t_cstr str, size_t start, size_t len)
 {

@@ -6,11 +6,11 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 14:17:43 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/15 12:22:45 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/21 15:32:46 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_string.h"
 
 /**
  * cstr - Creates a constant string structure from a string literal
@@ -18,7 +18,7 @@
  * @param s Pointer to the string literal
  * @return The newly created t_cstr with len and size set
  *
- * NULL Handling: If s is NULL, returns a NULL t_cstr.
+ * @args: If s is NULL, returns a NULL t_cstr.
  */
 t_cstr	cstr(const t_i8 *s)
 {
@@ -39,7 +39,7 @@ t_cstr	cstr(const t_i8 *s)
  * @param str The t_dstr to convert
  * @return A t_cstr representing the same data
  *
- * NULL Handling: If str.s is NULL, returns a NULL t_cstr.
+ * @args: If str.s is NULL, returns a NULL t_cstr.
  */
 t_cstr	cstr_d(t_dstr str)
 {
