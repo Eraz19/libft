@@ -210,18 +210,19 @@ void test_free_node(void)
 	list = lst_insert(&list, node(v3), 2);
 	
 	// Delete middle node
-	free_node(&list, 1, del_int);
+	t_node *middle = get(list, 1);
+	free_node(&list, middle, del_int);
 	TEST_ASSERT(list.size == 2, "Size decreased");
 	TEST_ASSERT(*(int *)list.nodes->content == 10, "First still there");
 	TEST_ASSERT(*(int *)list.nodes->next->content == 30, "Third moved up");
 	
 	// Delete first node
-	free_node(&list, 0, del_int);
+	free_node(&list, list.nodes, del_int);
 	TEST_ASSERT(list.size == 1, "Size decreased again");
 	TEST_ASSERT(*(int *)list.nodes->content == 30, "Correct node remains");
 	
 	// Delete last node
-	free_node(&list, 0, del_int);
+	free_node(&list, list.nodes, del_int);
 	TEST_ASSERT(list.size == 0, "List empty");
 	TEST_ASSERT(list.nodes == NULL, "Nodes NULL");
 	
@@ -229,8 +230,8 @@ void test_free_node(void)
 	int *v4 = malloc(sizeof(int));
 	*v4 = 40;
 	list = lst_insert(&list, node(v4), 0);
-	free_node(&list, 100, del_int);
-	TEST_ASSERT(list.size == 1, "Out of bounds does nothing");
+	free_node(&list, NULL, del_int);
+	TEST_ASSERT(list.size == 1, "NULL node does nothing");
 	
 	free_lst(&list, del_int);
 }
@@ -279,6 +280,89 @@ void test_get(void)
 	t_lst empty = lst_();
 	t_node *from_empty = get(empty, 0);
 	TEST_ASSERT(from_empty == NULL, "Get from empty returns NULL");
+	
+	free_lst(&list, del_int);
+}
+
+// Helper functions for filter tests
+static t_bool is_even(void *content, void *context)
+{
+	(void)context;
+	return (*(int *)content % 2 == 0);
+}
+
+static t_bool is_positive(void *content, void *context)
+{
+	(void)context;
+	return (*(int *)content > 0);
+}
+
+static t_bool is_greater_than_20(void *content, void *context)
+{
+	(void)context;
+	return (*(int *)content > 20);
+}
+
+static t_bool always_false(void *content, void *context)
+{
+	(void)content;
+	(void)context;
+	return (FALSE);
+}
+
+void test_filter(void)
+{
+	TEST_START("filter - list filtering");
+	
+	// Create list with values: 10, 15, 20, 25, 30
+	int *v1 = malloc(sizeof(int));
+	int *v2 = malloc(sizeof(int));
+	int *v3 = malloc(sizeof(int));
+	int *v4 = malloc(sizeof(int));
+	int *v5 = malloc(sizeof(int));
+	*v1 = 10;
+	*v2 = 15;
+	*v3 = 20;
+	*v4 = 25;
+	*v5 = 30;
+	
+	t_lst list = lst_();
+	list = lst_insert(&list, node(v1), 0);
+	list = lst_insert(&list, node(v2), 1);
+	list = lst_insert(&list, node(v3), 2);
+	list = lst_insert(&list, node(v4), 3);
+	list = lst_insert(&list, node(v5), 4);
+	
+	// Filter even numbers (should find first: 10)
+	t_lst evens = filter(list, is_even, NULL);
+	TEST_ASSERT(evens.nodes != NULL, "Filter finds even numbers");
+	TEST_ASSERT(*(int *)evens.nodes->content == 10, "First even is 10");
+	
+	// Filter greater than 20 (should find first: 25)
+	t_lst greater = filter(list, is_greater_than_20, NULL);
+	TEST_ASSERT(greater.nodes != NULL, "Filter finds values > 20");
+	TEST_ASSERT(*(int *)greater.nodes->content == 25, "First value > 20 is 25");
+	
+	// Filter all positive (should find first: 10)
+	t_lst positive = filter(list, is_positive, NULL);
+	TEST_ASSERT(positive.nodes != NULL, "Filter finds positive values");
+	TEST_ASSERT(*(int *)positive.nodes->content == 10, "First positive is 10");
+	
+	// Filter with no matches
+	t_lst no_match = filter(list, always_false, NULL);
+	TEST_ASSERT(no_match.nodes == NULL, "No matches returns empty list");
+	TEST_ASSERT(no_match.size == 0, "No matches has size 0");
+	
+	// Empty list
+	t_lst empty = lst_();
+	t_lst filtered_empty = filter(empty, is_even, NULL);
+	TEST_ASSERT(filtered_empty.nodes == NULL, "Filter empty list returns empty");
+	TEST_ASSERT(filtered_empty.size == 0, "Filter empty has size 0");
+	
+	// NULL comparison function
+	t_lst null_cmp = filter(list, NULL, NULL);
+	TEST_ASSERT(null_cmp.nodes == NULL, "NULL comparison returns empty list");
+	TEST_ASSERT(null_cmp.size == 0, "NULL comparison has size 0");
 	
 	free_lst(&list, del_int);
 }
@@ -536,6 +620,7 @@ void run_list_comprehensive_tests(void)
 	
 	// Get tests
 	test_get();
+	test_filter();
 	
 	// Insert tests
 	test_lst_insert();

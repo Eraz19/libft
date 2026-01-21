@@ -119,7 +119,7 @@ void test_empty_list_operations(void)
 	
 	// Free node from empty (shouldn't crash)
 	t_lst empty2 = lst_();
-	free_node(&empty2, 0, del_int);
+	free_node(&empty2, NULL, del_int);
 	TEST_ASSERT(1, "Free node from empty safe");
 }
 
@@ -162,7 +162,7 @@ void test_single_node_operations(void)
 	t_lst single2 = lst_n(node(v2));
 	
 	// Free only node
-	free_node(&single2, 0, del_int);
+	free_node(&single2, single2.nodes, del_int);
 	TEST_ASSERT(single2.nodes == NULL, "Free only node leaves empty list");
 	TEST_ASSERT(single2.size == 0, "Size reset after free");
 }
@@ -213,7 +213,8 @@ void test_very_large_lists(void)
 	
 	// Delete every other node
 	for (int i = 49; i >= 0; i--) {
-		free_node(&delete_test, (size_t)i * 2, del_int);
+		t_node *to_delete = get(delete_test, (size_t)i * 2);
+		free_node(&delete_test, to_delete, del_int);
 	}
 	TEST_ASSERT(delete_test.size == 50, "Alternating deletions correct");
 	
@@ -294,15 +295,17 @@ void test_delete_patterns(void)
 	}
 	
 	// Delete from beginning repeatedly
-	free_node(&list, 0, del_int);
-	free_node(&list, 0, del_int);
-	free_node(&list, 0, del_int);
+	free_node(&list, list.nodes, del_int);
+	free_node(&list, list.nodes, del_int);
+	free_node(&list, list.nodes, del_int);
 	TEST_ASSERT(list.size == 7, "Three front deletions");
 	TEST_ASSERT(*(int *)get(list, 0)->content == 3, "Front deletions shift list");
 	
 	// Delete from end repeatedly
-	free_node(&list, 6, del_int);
-	free_node(&list, 5, del_int);
+	t_node *last = get(list, 6);
+	free_node(&list, last, del_int);
+	last = get(list, 5);
+	free_node(&list, last, del_int);
 	TEST_ASSERT(list.size == 5, "Back deletions");
 	TEST_ASSERT(*(int *)get(list, 4)->content == 7, "Back deletions preserve rest");
 	
@@ -317,7 +320,7 @@ void test_delete_patterns(void)
 	}
 	
 	while (delete_all.size > 0)
-		free_node(&delete_all, 0, del_int);
+		free_node(&delete_all, delete_all.nodes, del_int);
 	TEST_ASSERT(delete_all.nodes == NULL, "All nodes deleted");
 	TEST_ASSERT(delete_all.size == 0, "Size is 0 after all deleted");
 	
@@ -325,8 +328,8 @@ void test_delete_patterns(void)
 	int *v = malloc(sizeof(int));
 	*v = 100;
 	t_lst oob = lst_n(node(v));
-	free_node(&oob, 100, del_int);
-	TEST_ASSERT(oob.size == 1, "Out of bounds delete does nothing");
+	free_node(&oob, NULL, del_int);
+	TEST_ASSERT(oob.size == 1, "NULL node does nothing");
 	free_lst(&oob, del_int);
 }
 
@@ -459,16 +462,185 @@ void test_boundary_indices(void)
 	
 	// Delete at boundaries
 	size_t orig_size = list.size;
-	free_node(&list, 0, del_int);
+	free_node(&list, list.nodes, del_int);
 	TEST_ASSERT(list.size == orig_size - 1, "Delete at 0");
 	
-	free_node(&list, list.size - 1, del_int);
+	t_node *last_node = get(list, list.size - 1);
+	free_node(&list, last_node, del_int);
 	TEST_ASSERT(list.size == orig_size - 2, "Delete at last");
 	
-	free_node(&list, 100, del_int);
-	TEST_ASSERT(list.size == orig_size - 2, "Delete beyond does nothing");
+	free_node(&list, NULL, del_int);
+	TEST_ASSERT(list.size == orig_size - 2, "NULL node does nothing");
 	
 	free_lst(&list, del_int);
+}
+
+// ============================================================================
+// FILTER EDGE CASE TESTS
+// ============================================================================
+
+// Helper functions for filter tests
+static t_bool is_even(void *content, void *context)
+{
+	(void)context;
+	return (*(int *)content % 2 == 0);
+}
+
+static t_bool is_negative(void *content, void *context)
+{
+	(void)context;
+	return (*(int *)content < 0);
+}
+
+static t_bool always_true(void *content, void *context)
+{
+	(void)content;
+	(void)context;
+	return (TRUE);
+}
+
+static t_bool is_zero(void *content, void *context)
+{
+	(void)context;
+	return (*(int *)content == 0);
+}
+
+void test_filter_edge_cases(void)
+{
+	TEST_START("Filter edge case handling");
+	
+	// Filter on empty list
+	t_lst empty = lst_();
+	t_lst filtered_empty = filter(empty, is_even, NULL);
+	TEST_ASSERT(filtered_empty.nodes == NULL, "Filter empty returns NULL");
+	TEST_ASSERT(filtered_empty.size == 0, "Filter empty size is 0");
+	
+	// Filter with NULL comparison
+	int *v1 = malloc(sizeof(int));
+	*v1 = 10;
+	t_lst list = lst_n(node(v1));
+	t_lst null_cmp = filter(list, NULL, NULL);
+	TEST_ASSERT(null_cmp.nodes == NULL, "NULL comparison returns empty");
+	TEST_ASSERT(null_cmp.size == 0, "NULL comparison size is 0");
+	free_lst(&list, del_int);
+	
+	// Filter with no matches
+	t_lst no_match_list = lst_();
+	for (int i = 1; i <= 5; i++) {
+		int *val = malloc(sizeof(int));
+		*val = i * 2 + 1;  // All odd numbers: 3, 5, 7, 9, 11
+		no_match_list = lst_insert(&no_match_list, node(val), (size_t)(i - 1));
+	}
+	t_lst no_match = filter(no_match_list, is_even, NULL);
+	TEST_ASSERT(no_match.nodes == NULL, "No matches returns empty");
+	TEST_ASSERT(no_match.size == 0, "No matches size is 0");
+	free_lst(&no_match_list, del_int);
+	
+	// Filter first element matches
+	t_lst first_match = lst_();
+	for (int i = 0; i < 5; i++) {
+		int *val = malloc(sizeof(int));
+		*val = (i == 0) ? 10 : i * 2 + 1;  // First is even, rest odd
+		first_match = lst_insert(&first_match, node(val), (size_t)i);
+	}
+	t_lst filtered_first = filter(first_match, is_even, NULL);
+	TEST_ASSERT(filtered_first.nodes != NULL, "First match found");
+	TEST_ASSERT(*(int *)filtered_first.nodes->content == 10, "First match correct");
+	free_lst(&first_match, del_int);
+	
+	// Filter last element matches
+	t_lst last_match = lst_();
+	for (int i = 0; i < 5; i++) {
+		int *val = malloc(sizeof(int));
+		*val = (i == 4) ? 10 : i * 2 + 1;  // Last is even, rest odd
+		last_match = lst_insert(&last_match, node(val), (size_t)i);
+	}
+	t_lst filtered_last = filter(last_match, is_even, NULL);
+	TEST_ASSERT(filtered_last.nodes != NULL, "Last match found");
+	TEST_ASSERT(*(int *)filtered_last.nodes->content == 10, "Last match correct");
+	free_lst(&last_match, del_int);
+	
+	// Filter middle element matches
+	t_lst middle_match = lst_();
+	for (int i = 0; i < 5; i++) {
+		int *val = malloc(sizeof(int));
+		*val = (i == 2) ? 10 : i * 2 + 1;  // Middle is even, rest odd
+		middle_match = lst_insert(&middle_match, node(val), (size_t)i);
+	}
+	t_lst filtered_middle = filter(middle_match, is_even, NULL);
+	TEST_ASSERT(filtered_middle.nodes != NULL, "Middle match found");
+	TEST_ASSERT(*(int *)filtered_middle.nodes->content == 10, "Middle match correct");
+	free_lst(&middle_match, del_int);
+	
+	// Filter all elements match (returns first)
+	t_lst all_match = lst_();
+	for (int i = 0; i < 5; i++) {
+		int *val = malloc(sizeof(int));
+		*val = i * 2;  // All even
+		all_match = lst_insert(&all_match, node(val), (size_t)i);
+	}
+	t_lst filtered_all = filter(all_match, is_even, NULL);
+	TEST_ASSERT(filtered_all.nodes != NULL, "All match found");
+	TEST_ASSERT(*(int *)filtered_all.nodes->content == 0, "Returns first match");
+	free_lst(&all_match, del_int);
+	
+	// Filter single node list - match
+	int *v2 = malloc(sizeof(int));
+	*v2 = 10;
+	t_lst single_match = lst_n(node(v2));
+	t_lst filtered_single_match = filter(single_match, is_even, NULL);
+	TEST_ASSERT(filtered_single_match.nodes != NULL, "Single match found");
+	TEST_ASSERT(*(int *)filtered_single_match.nodes->content == 10, "Single match correct");
+	free_lst(&single_match, del_int);
+	
+	// Filter single node list - no match
+	int *v3 = malloc(sizeof(int));
+	*v3 = 11;
+	t_lst single_no_match = lst_n(node(v3));
+	t_lst filtered_single_no = filter(single_no_match, is_even, NULL);
+	TEST_ASSERT(filtered_single_no.nodes == NULL, "Single no match returns empty");
+	free_lst(&single_no_match, del_int);
+	
+	// Filter with always true predicate (returns first)
+	t_lst any_list = lst_();
+	for (int i = 0; i < 3; i++) {
+		int *val = malloc(sizeof(int));
+		*val = i + 1;
+		any_list = lst_insert(&any_list, node(val), (size_t)i);
+	}
+	t_lst filtered_true = filter(any_list, always_true, NULL);
+	TEST_ASSERT(filtered_true.nodes != NULL, "Always true finds first");
+	TEST_ASSERT(*(int *)filtered_true.nodes->content == 1, "Returns first element");
+	free_lst(&any_list, del_int);
+	
+	// Filter looking for zero
+	t_lst with_zero = lst_();
+	int *z1 = malloc(sizeof(int));
+	int *z2 = malloc(sizeof(int));
+	int *z3 = malloc(sizeof(int));
+	*z1 = 5;
+	*z2 = 0;
+	*z3 = 10;
+	with_zero = lst_insert(&with_zero, node(z1), 0);
+	with_zero = lst_insert(&with_zero, node(z2), 1);
+	with_zero = lst_insert(&with_zero, node(z3), 2);
+	t_lst filtered_zero = filter(with_zero, is_zero, NULL);
+	TEST_ASSERT(filtered_zero.nodes != NULL, "Zero found");
+	TEST_ASSERT(*(int *)filtered_zero.nodes->content == 0, "Zero match correct");
+	free_lst(&with_zero, del_int);
+	
+	// Filter with negative numbers
+	t_lst with_negatives = lst_();
+	for (int i = -3; i <= 3; i++) {
+		int *val = malloc(sizeof(int));
+		*val = i;
+		with_negatives = lst_insert(&with_negatives, node(val), 
+			(size_t)(i + 3));
+	}
+	t_lst filtered_neg = filter(with_negatives, is_negative, NULL);
+	TEST_ASSERT(filtered_neg.nodes != NULL, "Negative found");
+	TEST_ASSERT(*(int *)filtered_neg.nodes->content == -3, "First negative correct");
+	free_lst(&with_negatives, del_int);
 }
 
 // ============================================================================
@@ -526,7 +698,7 @@ void test_list_stress(void)
 		
 		// Delete 10
 		for (int i = 0; i < 10; i++) {
-			free_node(&stress, 0, del_int);
+			free_node(&stress, stress.nodes, del_int);
 		}
 	}
 	TEST_ASSERT(stress.size == 100, "Stress test final size");
@@ -581,6 +753,7 @@ void run_list_edge_case_tests(void)
 	test_map_failures();
 	
 	test_boundary_indices();
+	test_filter_edge_cases();
 	test_ownership_chains();
 	
 	test_list_stress();

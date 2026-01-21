@@ -6,13 +6,13 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 15:53:51 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 19:05:30 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 22:05:12 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static t_dstr	apply_flag_altout(t_dstr out, t_rule_ctnt *content)
+static t_dstr	apply_flag_altout(t_dstr out, t_rule_content *content)
 {
 	size_t	i;
 
@@ -36,7 +36,7 @@ static t_dstr	apply_flag_altout(t_dstr out, t_rule_ctnt *content)
 	return (out);
 }
 
-static t_dstr	apply_flag_prec(t_dstr out, t_rule_ctnt *content)
+static t_dstr	apply_flag_prec(t_dstr out, t_rule_content *content)
 {
 	t_rule_type	rule_type;
 
@@ -60,7 +60,7 @@ static t_dstr	apply_flag_prec(t_dstr out, t_rule_ctnt *content)
 	return (out);
 }
 
-static t_dstr	apply_flag_pad(t_dstr out, t_rule_ctnt *content)
+static t_dstr	apply_flag_pad(t_dstr out, t_rule_content *content)
 {
 	t_dstr		pad;
 	size_t		rule_width;
@@ -89,7 +89,7 @@ static t_dstr	apply_flag_pad(t_dstr out, t_rule_ctnt *content)
 	return (out);
 }
 
-static t_dstr	apply_flag_sign(t_dstr out, t_rule_ctnt *content)
+static t_dstr	apply_flag_sign(t_dstr out, t_rule_content *content)
 {
 	t_bool	is_neg;
 
@@ -103,7 +103,7 @@ static t_dstr	apply_flag_sign(t_dstr out, t_rule_ctnt *content)
 	return (out);
 }
 
-t_dstr	apply_flags(t_dstr str, t_rule_ctnt *content)
+t_dstr	apply_flags(t_dstr str, t_rule_content *content)
 {
 	t_dstr	out;
 

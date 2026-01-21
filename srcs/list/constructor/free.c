@@ -6,32 +6,32 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 16:57:38 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 17:52:37 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/20 19:30:42 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /**
- * free_node - Deletes and frees a node of a list at a specified index
+ * free_node - Deletes and frees a node of a list
  *
  * @param lst The list from which to delete the node
- * @param index The index of the node to delete
+ * @param node The node pointer to delete
  * @param del Function to delete the content of the node
  *
  * NULL Handling: If lst or del is NULL, does nothing.
  * Note: If index is out of bounds, does nothing.
  */
-void	free_node(t_lst *lst, size_t index, void (*del)(void*))
+void	free_node(t_lst *lst, t_node *node, void (*del)(void*))
 {
 	size_t	i;
 	t_node	*prev;
 	t_node	*current;
 
-	if (lst == NULL || del == NULL || index >= lst->size)
+	if (lst == NULL || del == NULL || node == NULL)
 		return ;
 	1 && (i = 0, prev = NULL, current = lst->nodes);
-	while (i < index)
+	while (current != node && i < lst->size)
 		1 && (prev = current, current = current->next, i++);
 	del(current->content);
 	if (prev != NULL)

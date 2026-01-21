@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 09:48:42 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 19:08:09 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/20 12:41:51 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_rule_type	parse_rule_type(t_i8 c)
 		return (_error);
 }
 
-static t_bool	parse_flags(t_rule_ctnt *content, t_i8 c)
+static t_bool	parse_flags(t_rule_content *content, t_i8 c)
 {
 	if (c == '0' || c == '-' || c == ' ' || c == '+' || c == '#')
 	{
@@ -56,15 +56,15 @@ static t_bool	parse_flags(t_rule_ctnt *content, t_i8 c)
 		return (FALSE);
 }
 
-static t_bool	is_parsable(t_rule_ctnt *content, const t_i8 c)
+static t_bool	is_parsable(t_rule_content *content, const t_i8 c)
 {
 	return (c != '\0' && content->type != _error);
 }
 
 static t_rule	*parse_rule(t_rule *rule, t_cstr fmt)
 {
-	size_t		i;
-	t_rule_ctnt	*content;
+	size_t			i;
+	t_rule_content	*content;
 
 	1 && (i = 0, content = rule->content);
 	if (fmt.s[i] != '%')

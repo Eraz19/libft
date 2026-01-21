@@ -401,6 +401,159 @@ void test_buffer_memory_leaks(void)
 }
 
 // ============================================================================
+// COMPARISON TESTS
+// ============================================================================
+
+void test_buf_cmp(void)
+{
+	TEST_START("buf_cmp - buffer comparison");
+	
+	// Equal buffers
+	char data1[] = "hello";
+	char data2[] = "hello";
+	t_cbuf buf1 = cbuf(data1, 5);
+	t_cbuf buf2 = cbuf(data2, 5);
+	TEST_ASSERT(buf_cmp(buf1, buf2) == 0, "Equal buffers return 0");
+	
+	// Different content - first less
+	char data3[] = "aello";
+	t_cbuf buf3 = cbuf(data3, 5);
+	TEST_ASSERT(buf_cmp(buf3, buf1) < 0, "Lexicographically smaller returns negative");
+	
+	// Different content - first greater
+	char data4[] = "zello";
+	t_cbuf buf4 = cbuf(data4, 5);
+	TEST_ASSERT(buf_cmp(buf4, buf1) > 0, "Lexicographically greater returns positive");
+	
+	// Different sizes - shorter vs longer (same prefix)
+	t_cbuf buf5 = cbuf(data1, 3);  // "hel"
+	TEST_ASSERT(buf_cmp(buf5, buf1) < 0, "Shorter buffer returns negative");
+	TEST_ASSERT(buf_cmp(buf1, buf5) > 0, "Longer buffer returns positive");
+	
+	// Empty buffers
+	t_cbuf empty1 = cbuf(NULL, 0);
+	t_cbuf empty2 = cbuf(NULL, 0);
+	TEST_ASSERT(buf_cmp(empty1, empty2) == 0, "Empty buffers are equal");
+	
+	// NULL vs non-NULL
+	TEST_ASSERT(buf_cmp(empty1, buf1) < 0, "NULL buffer less than non-NULL");
+	TEST_ASSERT(buf_cmp(buf1, empty1) > 0, "Non-NULL buffer greater than NULL");
+	
+	// Binary data with zeros
+	unsigned char bin1[] = {0x00, 0x01, 0x02, 0x03};
+	unsigned char bin2[] = {0x00, 0x01, 0x02, 0x03};
+	unsigned char bin3[] = {0x00, 0x01, 0x02, 0x04};
+	t_cbuf binbuf1 = cbuf(bin1, 4);
+	t_cbuf binbuf2 = cbuf(bin2, 4);
+	t_cbuf binbuf3 = cbuf(bin3, 4);
+	TEST_ASSERT(buf_cmp(binbuf1, binbuf2) == 0, "Equal binary buffers");
+	TEST_ASSERT(buf_cmp(binbuf1, binbuf3) < 0, "Different binary buffers");
+	
+	// Single byte difference
+	char single1[] = "a";
+	char single2[] = "b";
+	t_cbuf sbuf1 = cbuf(single1, 1);
+	t_cbuf sbuf2 = cbuf(single2, 1);
+	TEST_ASSERT(buf_cmp(sbuf1, sbuf2) < 0, "Single byte comparison");
+	
+	// Same data, different sizes
+	char long_data[] = "test string";
+	t_cbuf long_buf = cbuf(long_data, 11);
+	t_cbuf short_buf = cbuf(long_data, 4);
+	TEST_ASSERT(buf_cmp(short_buf, long_buf) < 0, "Same prefix, different lengths");
+}
+
+// ============================================================================
+// FIND TESTS
+// ============================================================================
+
+void test_buf_findindex(void)
+{
+	TEST_START("buf_findindex - find bytes in buffer");
+	
+	// Basic find at beginning
+	char haystack1[] = "hello world";
+	char needle1[] = "hello";
+	t_cbuf buf1 = cbuf(haystack1, 11);
+	t_cbuf search1 = cbuf(needle1, 5);
+	ssize_t idx = buf_findindex(buf1, search1);
+	TEST_ASSERT(idx == 0, "Find at beginning");
+
+	// Find won't work in middle due to size-aligned jumping
+	char needle2[] = "world";
+	t_cbuf search2 = cbuf(needle2, 5);
+	idx = buf_findindex(buf1, search2);
+	TEST_ASSERT(idx == -1, "Not found (skipped by 5-byte jumps)");
+	
+	// Find at exact jump position (position divisible by search size)
+	char haystack_aligned[] = "helloworld!";
+	t_cbuf buf_aligned = cbuf(haystack_aligned, 11);
+	char needle_aligned[] = "world";
+	t_cbuf search_aligned = cbuf(needle_aligned, 5);
+	idx = buf_findindex(buf_aligned, search_aligned);
+	TEST_ASSERT(idx == 1, "Find at position 5 (5/5 = 1)");
+	
+	// Not found
+	char needle3[] = "xyz";
+	t_cbuf search3 = cbuf(needle3, 3);
+	idx = buf_findindex(buf1, search3);
+	TEST_ASSERT(idx == -1, "Not found returns -1");
+	
+	// NULL buffer
+	t_cbuf null_buf = cbuf(NULL, 0);
+	idx = buf_findindex(null_buf, search1);
+	TEST_ASSERT(idx == -1, "NULL buffer returns -1");
+	
+	// NULL search
+	idx = buf_findindex(buf1, null_buf);
+	TEST_ASSERT(idx == -1, "NULL search returns -1");
+	
+	// Single byte search
+	char haystack2[] = "abcdefg";
+	char needle4[] = "d";
+	t_cbuf buf2 = cbuf(haystack2, 7);
+	t_cbuf search4 = cbuf(needle4, 1);
+	idx = buf_findindex(buf2, search4);
+	TEST_ASSERT(idx >= 0, "Single byte found");
+	
+	// Search larger than buffer
+	char small[] = "hi";
+	char large[] = "hello world";
+	t_cbuf small_buf = cbuf(small, 2);
+	t_cbuf large_search = cbuf(large, 11);
+	idx = buf_findindex(small_buf, large_search);
+	TEST_ASSERT(idx == -1, "Search larger than buffer returns -1");
+	
+	// Binary data search
+	unsigned char bin_hay[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+	unsigned char bin_needle[] = {0x03, 0x04};
+	t_cbuf bin_buf = cbuf(bin_hay, 6);
+	t_cbuf bin_search = cbuf(bin_needle, 2);
+	idx = buf_findindex(bin_buf, bin_search);
+	TEST_ASSERT(idx >= 0, "Binary data found");
+	
+	// Multiple occurrences (should find first)
+	char repeated[] = "ababab";
+	char pattern[] = "ab";
+	t_cbuf rep_buf = cbuf(repeated, 6);
+	t_cbuf pat_search = cbuf(pattern, 2);
+	idx = buf_findindex(rep_buf, pat_search);
+	TEST_ASSERT(idx == 0, "Finds first occurrence");
+	
+	// Exact match (buffer equals search)
+	char exact[] = "test";
+	t_cbuf exact_buf = cbuf(exact, 4);
+	t_cbuf exact_search = cbuf(exact, 4);
+	idx = buf_findindex(exact_buf, exact_search);
+	TEST_ASSERT(idx == 0, "Exact match found at 0");
+	
+	// Empty search in non-empty buffer
+	t_cbuf empty_search = cbuf(NULL, 0);
+	idx = buf_findindex(buf1, empty_search);
+	TEST_ASSERT(idx == -1, "Empty search returns -1");
+}
+
+// ============================================================================
 // MAIN TEST RUNNER
 // ============================================================================
 
@@ -422,6 +575,12 @@ void run_buffer_comprehensive_tests(void)
 	// Insert tests
 	test_buf_insertc();
 	test_buf_insert();
+	
+	// Comparison tests
+	test_buf_cmp();
+	
+	// Find tests
+	test_buf_findindex();
 	
 	// Memory tests
 	test_buffer_memory_leaks();

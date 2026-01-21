@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 20:41:04 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 11:20:01 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/20 11:24:01 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,9 @@ t_dbuf	buf_insert(t_dbuf *buf, t_dbuf *insrt, size_t i, t_buf_strat mode);
 t_dbuf	buf_insertc(t_dbuf *buf, t_cbuf insrt, size_t i, t_buf_strat mode);
 
 t_cbuf	buf_shift(t_cbuf buf, size_t offset);
+
+t_i32	buf_cmp(t_cbuf buf1, t_cbuf buf2);
+
+ssize_t	buf_findindex(t_cbuf buf, t_cbuf bytes);
 
 #endif

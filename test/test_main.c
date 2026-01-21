@@ -6,7 +6,7 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 15:30:00 by Copilot           #+#    #+#             */
-/*   Updated: 2026/01/19 19:45:00 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/20 12:40:13 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void run_char_comprehensive_tests(void);
 void run_math_comprehensive_tests(void);
 void run_printf_comprehensive_tests(void);
 void run_printf_edge_case_tests(void);
+void run_gnl_comprehensive_tests(void);
+void run_gnl_edge_case_tests(void);
 
 // External test counters from string tests
 extern int g_tests_run;
@@ -54,6 +56,11 @@ extern int g_math_tests_failed;
 extern int g_printf_tests_run;
 extern int g_printf_tests_passed;
 extern int g_printf_tests_failed;
+
+// External test counters from gnl tests
+extern int g_gnl_tests_run;
+extern int g_gnl_tests_passed;
+extern int g_gnl_tests_failed;
 
 int main(void)
 {
@@ -207,12 +214,39 @@ int main(void)
 	int printf_failed = g_printf_tests_failed;
 
 	// ========================================================================
+	// GET_NEXT_LINE TESTS
+	// ========================================================================
+	
+	printf("\n");
+	printf(COLOR_CYAN " ------- GET_NEXT_LINE TEST SUITE -------\n" COLOR_RESET);
+
+	// Run comprehensive gnl tests
+	printf(COLOR_BLUE "════════════════════════════════════════════════════\n");
+	printf("      GET_NEXT_LINE - COMPREHENSIVE TESTS     \n");
+	printf("════════════════════════════════════════════════════\n" COLOR_RESET);
+
+	run_gnl_comprehensive_tests();
+
+	// Run edge case gnl tests
+	printf("\n");
+	printf(COLOR_BLUE "════════════════════════════════════════════════════\n");
+	printf("      GET_NEXT_LINE - EDGE CASE TESTS     \n");
+	printf("════════════════════════════════════════════════════\n" COLOR_RESET);
+
+	run_gnl_edge_case_tests();
+
+	// Collect gnl test results
+	int gnl_tests = g_gnl_tests_run;
+	int gnl_passed = g_gnl_tests_passed;
+	int gnl_failed = g_gnl_tests_failed;
+
+	// ========================================================================
 	// OVERALL SUMMARY
 	// ========================================================================
 	
-	total_tests = string_tests + buffer_tests + list_tests + char_tests + math_tests + printf_tests;
-	total_passed = string_passed + buffer_passed + list_passed + char_passed + math_passed + printf_passed;
-	total_failed = string_failed + buffer_failed + list_failed + char_failed + math_failed + printf_failed;
+	total_tests = string_tests + buffer_tests + list_tests + char_tests + math_tests + printf_tests + gnl_tests;
+	total_passed = string_passed + buffer_passed + list_passed + char_passed + math_passed + printf_passed + gnl_passed;
+	total_failed = string_failed + buffer_failed + list_failed + char_failed + math_failed + printf_failed + gnl_failed;
 
 	printf("\n");
 	printf(COLOR_MAGENTA "╔════════════════════════════════════════════════════╗\n");
@@ -270,6 +304,15 @@ int main(void)
 		printf_tests, printf_passed);
 	if (printf_failed > 0)
 		printf(COLOR_RED "Failed: %d" COLOR_RESET "\n", printf_failed);
+	else
+		printf(COLOR_GREEN "Failed: 0" COLOR_RESET "\n");
+
+	printf("\n");
+	printf(COLOR_CYAN "Get_next_line Results:\n" COLOR_RESET);
+	printf("  Total: %d | " COLOR_GREEN "Passed: %d" COLOR_RESET " | ", 
+		gnl_tests, gnl_passed);
+	if (gnl_failed > 0)
+		printf(COLOR_RED "Failed: %d" COLOR_RESET "\n", gnl_failed);
 	else
 		printf(COLOR_GREEN "Failed: 0" COLOR_RESET "\n");
 

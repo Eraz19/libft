@@ -6,7 +6,7 @@
 #    By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/12 00:00:00 by Copilot           #+#    #+#              #
-#    Updated: 2026/01/19 19:44:56 by adouieb          ###   ########.fr        #
+#    Updated: 2026/01/21 12:33:31 by adouieb          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,12 +22,13 @@ PROJECT:=libft
 
 # Variable to control header printing (0 = print, 1 = suppress)
 PREC_RULE:=0
+IN_TEST:=0
 # Variable to catch norminette errors
 NORM_ERRORS:=""
 
 # Compiler and flags
 CC:=cc
-CC_FLAGS:=-Werror -Wextra -Wall -fPIC
+CC_FLAGS:=-Werror -Wextra -Wall
 
 # Archiver and flags
 AR:=ar
@@ -39,6 +40,7 @@ SRC_DIR:=srcs
 OBJ_DIR:=objs
 TEST_DIR:=test
 
+GNL_DIR   :=${SRC_DIR}/gnl
 CHAR_DIR  :=${SRC_DIR}/char
 LIST_DIR  :=${SRC_DIR}/list
 MATH_DIR  :=${SRC_DIR}/math
@@ -47,8 +49,10 @@ STRING_DIR:=${SRC_DIR}/string
 PRINTF_DIR:=${SRC_DIR}/printf
 
 BUFFER_SRCS:=${BUFFER_DIR}/constructor/cbuf.c	\
+		${BUFFER_DIR}/method/find.c				\
 		${BUFFER_DIR}/method/shift.c			\
 		${BUFFER_DIR}/method/insert.c			\
+		${BUFFER_DIR}/method/compare.c			\
 		${BUFFER_DIR}/constructor/dbuf.c		\
 		${BUFFER_DIR}/constructor/free.c
 CHAR_SRCS:=${CHAR_DIR}/isalnum.c	\
@@ -67,11 +71,13 @@ LIST_SRCS:=${LIST_DIR}/constructor/free.c	\
 		${LIST_DIR}/constructor/node.c
 MATH_SRCS:=${MATH_DIR}/abs.c
 PRINTF_SRCS:=${PRINTF_DIR}/printf.c			\
-		${PRINTF_DIR}/parse.c					\
-		${PRINTF_DIR}/rule.c					\
-		${PRINTF_DIR}/flags.c					\
-		${PRINTF_DIR}/flags_precision.c			\
+		${PRINTF_DIR}/parse.c				\
+		${PRINTF_DIR}/rule.c				\
+		${PRINTF_DIR}/flags.c				\
+		${PRINTF_DIR}/flags_precision.c		\
 		${PRINTF_DIR}/convert_args.c
+GNL_SRCS:=${GNL_DIR}/get_next_line.c	\
+		${GNL_DIR}/reader.c
 STRING_SRCS:=${STRING_DIR}/constructor/cstr.c		\
 		${STRING_DIR}/constructor/dstr.c			\
 		${STRING_DIR}/constructor/free.c			\
@@ -91,6 +97,7 @@ STRING_SRCS:=${STRING_DIR}/constructor/cstr.c		\
 		${STRING_DIR}/method/buffer_conversion.c
 
 SRCS:=${BUFFER_SRCS}	\
+	${GNL_SRCS}			\
 	${CHAR_SRCS}		\
 	${LIST_SRCS}		\
 	${MATH_SRCS}		\
@@ -98,6 +105,7 @@ SRCS:=${BUFFER_SRCS}	\
 	${STRING_SRCS}
 
 # Object files (flat naming with category prefixes to avoid collisions)
+GNL_OBJS=$(addprefix $(OBJ_DIR)/gnl_,$(notdir $(GNL_SRCS:.c=.o)))
 CHAR_OBJS=$(addprefix $(OBJ_DIR)/char_,$(notdir $(CHAR_SRCS:.c=.o)))
 LIST_OBJS=$(addprefix $(OBJ_DIR)/list_,$(notdir $(LIST_SRCS:.c=.o)))
 MATH_OBJS=$(addprefix $(OBJ_DIR)/math_,$(notdir $(MATH_SRCS:.c=.o)))
@@ -105,13 +113,20 @@ BUFFER_OBJS=$(addprefix $(OBJ_DIR)/buffer_,$(notdir $(BUFFER_SRCS:.c=.o)))
 PRINTF_OBJS=$(addprefix $(OBJ_DIR)/printf_,$(notdir $(PRINTF_SRCS:.c=.o)))
 STRING_OBJS=$(addprefix $(OBJ_DIR)/string_,$(notdir $(STRING_SRCS:.c=.o)))
 
-OBJS=${BUFFER_OBJS} ${CHAR_OBJS} ${LIST_OBJS} ${MATH_OBJS} ${PRINTF_OBJS} ${STRING_OBJS}
+OBJS=${BUFFER_OBJS}	\
+	${GNL_OBJS}		\
+	${CHAR_OBJS}	\
+	${LIST_OBJS}	\
+	${MATH_OBJS}	\
+	${PRINTF_OBJS}	\
+	${STRING_OBJS}
 
 # ============================================================================ #
 #                                   HELPER                                     #
 # ============================================================================ #
 
 # Helper functions to map object files back to their source files
+get-gnl-src = $(filter %/$(patsubst gnl_%.o,%.c,$(notdir $(1))),$(GNL_SRCS))
 get-char-src = $(filter %/$(patsubst char_%.o,%.c,$(notdir $(1))),$(CHAR_SRCS))
 get-list-src = $(filter %/$(patsubst list_%.o,%.c,$(notdir $(1))),$(LIST_SRCS))
 get-math-src = $(filter %/$(patsubst math_%.o,%.c,$(notdir $(1))),$(MATH_SRCS))
@@ -130,15 +145,19 @@ all:
 	@# Print header if this is the top-level call
 	@if [ "$(PREC_RULE)" = "0" ]; then \
 		echo " \033[0;34m----- libft -----\033[0m"; \
-		NORM_ERRORS=$$(norminette $(SRC_DIR) $(HDR_DIR) 2>&1); \
-		if [ $$? -ne 0 ]; then \
-			echo " \033[0;35mChecking\033[0m norminette compliance \033[0;31m✗\033[0m"; \
-			echo "$$NORM_ERRORS" | sed 's/^/ /'; \
-			echo ; \
-			echo " \033[0;31mNorminette errors found. Aborting build.\033[0m"; \
-			exit 1; \
+		if command -v norminette >/dev/null 2>&1; then \
+			NORM_ERRORS=$$(norminette $(SRC_DIR) $(HDR_DIR) 2>&1); \
+			if [ $$? -ne 0 ]; then \
+				echo " \033[0;35mChecking\033[0m norminette compliance \033[0;31m✗\033[0m"; \
+				echo "$$NORM_ERRORS" | sed 's/^/ /'; \
+				echo ; \
+				echo " \033[0;31mNorminette errors found. Aborting build.\033[0m"; \
+				exit 1; \
+			else \
+				echo " \033[0;35mChecking\033[0m norminette compliance \033[0;32m✓\033[0m"; \
+			fi; \
 		else \
-			echo " \033[0;35mChecking\033[0m norminette compliance \033[0;32m✓\033[0m"; \
+			echo " \033[0;33mSkipping\033[0m norminette check (not installed)"; \
 		fi; \
 	fi
 	@# Build the library
@@ -169,6 +188,10 @@ $(PRINTF_OBJS): $(OBJ_DIR)/printf_%.o: $$(call get-printf-src,$$@)
 	@mkdir -p $(OBJ_DIR)
 	@echo " Generating $@"
 	@${CC} ${CC_FLAGS} -I${HDR_DIR} -c $< -o $@
+$(GNL_OBJS): $(OBJ_DIR)/gnl_%.o: $$(call get-gnl-src,$$@)
+	@mkdir -p $(OBJ_DIR)
+	@echo " Generating $@"
+	@${CC} ${CC_FLAGS} -I${HDR_DIR} -c $< -o $@
 $(STRING_OBJS): $(OBJ_DIR)/string_%.o: $$(call get-string-src,$$@)
 	@mkdir -p $(OBJ_DIR)
 	@echo " Generating $@"
@@ -188,8 +211,10 @@ clean:
 	@# Delete object directory if it exists
 	@if [ -d ${OBJ_DIR} ] && [ "$(wildcard ${OBJ_DIR}/*)" ]; then \
 		rm -rf ${OBJ_DIR}/*; \
-		echo " \033[0;31mDeleting\033[0m $(PROJECT) all obj files"; \
-	else \
+		if [ "$(IN_TEST)" -eq 0 ]; then \
+			echo " \033[0;31mDeleting\033[0m $(PROJECT) all obj files"; \
+		fi; \
+	elif [ "$(IN_TEST)" -eq 0 ]; then \
 		echo " \033[0;33mAlready\033[0m deleted $(PROJECT) all obj files"; \
 	fi
 
@@ -204,8 +229,10 @@ fclean:
 	@# Delete the library file
 	@if [ -f ${NAME} ]; then \
 		rm -f $(NAME); \
-		echo " \033[0;31mDeleting\033[0m $(PROJECT) library"; \
-	else \
+		if [ "$(IN_TEST)" -eq 0 ]; then \
+			echo " \033[0;31mDeleting\033[0m $(PROJECT) library"; \
+		fi; \
+	elif [ "$(IN_TEST)" -eq 0 ]; then \
 		echo " \033[0;33mAlready\033[0m deleted $(PROJECT) library"; \
 	fi
 
@@ -232,6 +259,7 @@ TEST_NAME:=libft_tests
 
 # Subdirectories for source files
 
+GNL_TEST_DIR   :=${TEST_DIR}/gnl
 CHAR_TEST_DIR  :=${TEST_DIR}/char
 LIST_TEST_DIR  :=${TEST_DIR}/list
 MATH_TEST_DIR  :=${TEST_DIR}/math
@@ -256,10 +284,14 @@ MATH_TEST_SRCS:=${MATH_TEST_DIR}/test_math_comprehensive.c
 PRINTF_TEST_SRCS:=${PRINTF_TEST_DIR}/test_printf_comprehensive.c \
 		${PRINTF_TEST_DIR}/test_printf_edge_cases.c
 
+GNL_TEST_SRCS:=${GNL_TEST_DIR}/test_gnl_comprehensive.c \
+		${GNL_TEST_DIR}/test_gnl_edge_cases.c
+
 # Unified test runner
 TEST_MAIN:=${TEST_DIR}/test_main.c
 
 ALL_TEST_SRCS:=${TEST_MAIN} \
+	${GNL_TEST_SRCS} 		\
 	${LIST_TEST_SRCS} 		\
 	${CHAR_TEST_SRCS} 		\
 	${MATH_TEST_SRCS}		\
@@ -274,20 +306,24 @@ test:
 		echo " \033[0;34m----- libft -----\033[0m"; \
 	fi
 	@# Check norminette compliance (optional)
-	@NORM_ERRORS=$$(norminette $(SRC_DIR) $(HDR_DIR) 2>&1); \
-	if [ $$? -ne 0 ]; then \
-		echo " \033[0;35mChecking\033[0m norminette compliance \033[0;31m✗\033[0m"; \
-		echo "$$NORM_ERRORS" | sed 's/^/ /'; \
-		echo ; \
-		echo " \033[0;31mNorminette errors found. Aborting build.\033[0m"; \
-		exit 1; \
+	@if command -v norminette >/dev/null 2>&1; then \
+		NORM_ERRORS=$$(norminette $(SRC_DIR) $(HDR_DIR) 2>&1); \
+		if [ $$? -ne 0 ]; then \
+			echo " \033[0;35mChecking\033[0m norminette compliance \033[0;31m✗\033[0m"; \
+			echo "$$NORM_ERRORS" | sed 's/^/ /'; \
+			echo ; \
+			echo " \033[0;31mNorminette errors found. Aborting build.\033[0m"; \
+			exit 1; \
+		else \
+			echo " \033[0;35mChecking\033[0m norminette compliance \033[0;32m✓\033[0m"; \
+		fi; \
 	else \
-		echo " \033[0;35mChecking\033[0m norminette compliance \033[0;32m✓\033[0m"; \
+		echo " \033[0;33mSkipping\033[0m norminette check (not installed)"; \
 	fi
 	@echo ;
 	@echo " \033[0;34m----- Building Libft -----\033[0m"
 	@# Clean objects (suppress header)
-	@$(MAKE) all PREC_RULE=1 --no-print-directory
+	@$(MAKE) re PREC_RULE=1 IN_TEST=1 --no-print-directory
 	@echo ;
 	@echo " \033[0;34m----- Building Unified Test Suite -----\033[0m"
 	@$(CC) $(CC_FLAGS) -Wno-format-zero-length -Wno-format-overflow -I./test -I${HDR_DIR} ${ALL_TEST_SRCS} -L. -lft -o ${TEST_NAME}
@@ -296,10 +332,6 @@ test:
 	@echo " \033[0;34m----- Running All Tests -----\033[0m"
 	@./${TEST_NAME}
 	@rm -f ${TEST_NAME}
-
-test_clean:
-	@rm -f ${TEST_NAME}
-	@echo " \033[0;32mCleaned\033[0m test executables"
+	@$(MAKE) fclean PREC_RULE=1 IN_TEST=1 --no-print-directory
 
 .PHONY: all bonus clean fclean re test test_clean
-

@@ -6,13 +6,13 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 13:17:54 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 18:57:25 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 22:05:02 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_dstr	apply_flag_prec_str(t_dstr out, t_rule_ctnt *content)
+t_dstr	apply_flag_prec_str(t_dstr out, t_rule_content *content)
 {
 	t_dstr	res;
 	size_t	prec;
@@ -23,7 +23,7 @@ t_dstr	apply_flag_prec_str(t_dstr out, t_rule_ctnt *content)
 	return (out);
 }
 
-t_dstr	apply_flag_prec_int(t_dstr out, t_rule_ctnt *ctnt)
+t_dstr	apply_flag_prec_int(t_dstr out, t_rule_content *ctnt)
 {
 	t_dstr	pad;
 	size_t	prec;
@@ -45,7 +45,7 @@ t_dstr	apply_flag_prec_int(t_dstr out, t_rule_ctnt *ctnt)
 	return (out);
 }
 
-t_dstr	apply_flag_prec_uint(t_dstr out, t_rule_ctnt *content)
+t_dstr	apply_flag_prec_uint(t_dstr out, t_rule_content *content)
 {
 	t_dstr	pad;
 	size_t	prec;

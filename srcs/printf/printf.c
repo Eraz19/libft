@@ -6,11 +6,12 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 10:31:26 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 19:11:14 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/20 19:31:13 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 static t_dstr	append_rule_result(t_dstr *res, t_rule *rule, va_list ap)
 {
@@ -81,7 +82,7 @@ t_i32	ft_printf(const t_i8 *fmt, ...)
 		if (res.s == NULL)
 			return (print_result(res, &rules, ap));
 		fmt_ = str_shift(fmt_, ((t_rule *)rules.nodes)->content->len + 1);
-		free_node(&rules, 0, ft_free_rule_content);
+		free_node(&rules, (t_node *)rules.nodes, ft_free_rule_content);
 	}
 	append_fmt_out_rule(&res, fmt_, fmt_.len);
 	return (print_result(res, &rules, ap));

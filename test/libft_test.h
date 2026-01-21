@@ -15,6 +15,40 @@
 
 # include <stdio.h>
 # include <fcntl.h>
+# include <signal.h>
+# include <unistd.h>
+# include <setjmp.h>
+# include <string.h>
+
+// ============================================================================
+// TIMEOUT SYSTEM
+// ============================================================================
+
+# define TEST_TIMEOUT_SECONDS 5
+# define MAX_TEST_DESC_LEN 256
+
+static jmp_buf g_timeout_jmp;
+static volatile sig_atomic_t g_timeout_occurred = 0;
+static char g_current_test_desc[MAX_TEST_DESC_LEN] = {0};
+static int g_current_test_number = 0;
+
+static void timeout_handler(int sig) __attribute__((unused));
+static void timeout_handler(int sig)
+{
+	(void)sig;
+	g_timeout_occurred = 1;
+	longjmp(g_timeout_jmp, 1);
+}
+
+static void setup_timeout(void) __attribute__((unused));
+static void setup_timeout(void)
+{
+	struct sigaction sa;
+	sa.sa_handler = timeout_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGALRM, &sa, NULL);
+}
 
 // ============================================================================
 // COLOR CODES
@@ -43,6 +77,32 @@
 	} while(0)
 
 /**
+ * TEST_WITH_TIMEOUT - Runs a test function with timeout protection
+ * 
+ * Usage: TEST_WITH_TIMEOUT(test_function_name, timeout_seconds);
+ */
+# define TEST_WITH_TIMEOUT(test_func, timeout) \
+	do { \
+		g_timeout_occurred = 0; \
+		g_current_test_desc[0] = '\0'; \
+		g_current_test_number = 0; \
+		setup_timeout(); \
+		if (setjmp(g_timeout_jmp) == 0) { \
+			alarm(timeout); \
+			test_func(); \
+			alarm(0); \
+		} else { \
+			alarm(0); \
+			if (g_current_test_desc[0] != '\0') { \
+				printf(COLOR_YELLOW "  ⏱️  #%d " COLOR_RESET "%s " COLOR_RED "(TIMEOUT after %ds)\n" COLOR_RESET, \
+					g_current_test_number, g_current_test_desc, timeout); \
+			} else { \
+				printf(COLOR_RED "  ⚠️  Test timed out after %d seconds\n" COLOR_RESET, timeout); \
+			} \
+		} \
+	} while(0)
+
+/**
  * TEST_ASSERT - Asserts a condition and updates test counters
  * 
  * This macro checks a condition and prints a colored pass/fail message.
@@ -59,6 +119,8 @@
 # define TEST_ASSERT(condition, message) \
 	do { \
 		g_tests_run++; \
+		snprintf(g_current_test_desc, MAX_TEST_DESC_LEN, "%s", message); \
+		g_current_test_number = g_tests_run; \
 		if (condition) { \
 			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_tests_run, message); \
 			g_tests_passed++; \
@@ -66,6 +128,7 @@
 			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_tests_run, message); \
 			g_tests_failed++; \
 		} \
+		g_current_test_desc[0] = '\0'; \
 	} while(0)
 
 /**
@@ -173,6 +236,8 @@
 # define LIST_TEST_ASSERT(condition, message) \
 	do { \
 		g_list_tests_run++; \
+		snprintf(g_current_test_desc, MAX_TEST_DESC_LEN, "%s", message); \
+		g_current_test_number = g_list_tests_run; \
 		if (condition) { \
 			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_list_tests_run, message); \
 			g_list_tests_passed++; \
@@ -180,6 +245,7 @@
 			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_list_tests_run, message); \
 			g_list_tests_failed++; \
 		} \
+		g_current_test_desc[0] = '\0'; \
 	} while(0)
 
 /**
@@ -189,6 +255,8 @@
 # define CHAR_TEST_ASSERT(condition, message) \
 	do { \
 		g_char_tests_run++; \
+		snprintf(g_current_test_desc, MAX_TEST_DESC_LEN, "%s", message); \
+		g_current_test_number = g_char_tests_run; \
 		if (condition) { \
 			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_char_tests_run, message); \
 			g_char_tests_passed++; \
@@ -196,6 +264,7 @@
 			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_char_tests_run, message); \
 			g_char_tests_failed++; \
 		} \
+		g_current_test_desc[0] = '\0'; \
 	} while(0)
 
 /**
@@ -205,6 +274,8 @@
 # define MATH_TEST_ASSERT(condition, message) \
 	do { \
 		g_math_tests_run++; \
+		snprintf(g_current_test_desc, MAX_TEST_DESC_LEN, "%s", message); \
+		g_current_test_number = g_math_tests_run; \
 		if (condition) { \
 			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_math_tests_run, message); \
 			g_math_tests_passed++; \
@@ -212,6 +283,7 @@
 			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_math_tests_run, message); \
 			g_math_tests_failed++; \
 		} \
+		g_current_test_desc[0] = '\0'; \
 	} while(0)
 
 /**
@@ -221,6 +293,8 @@
 # define PRINTF_TEST_ASSERT(condition, message) \
 	do { \
 		g_printf_tests_run++; \
+		snprintf(g_current_test_desc, MAX_TEST_DESC_LEN, "%s", message); \
+		g_current_test_number = g_printf_tests_run; \
 		if (condition) { \
 			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_printf_tests_run, message); \
 			g_printf_tests_passed++; \
@@ -228,6 +302,26 @@
 			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_printf_tests_run, message); \
 			g_printf_tests_failed++; \
 		} \
+		g_current_test_desc[0] = '\0'; \
+	} while(0)
+
+/**
+ * Get_next_line-specific TEST_ASSERT
+ * Uses g_gnl_tests_* counters
+ */
+# define GNL_TEST_ASSERT(condition, message) \
+	do { \
+		g_gnl_tests_run++; \
+		snprintf(g_current_test_desc, MAX_TEST_DESC_LEN, "%s", message); \
+		g_current_test_number = g_gnl_tests_run; \
+		if (condition) { \
+			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_gnl_tests_run, message); \
+			g_gnl_tests_passed++; \
+		} else { \
+			printf(COLOR_RED "  ✗ #%d " COLOR_RESET "%s\n", g_gnl_tests_run, message); \
+			g_gnl_tests_failed++; \
+		} \
+		g_current_test_desc[0] = '\0'; \
 	} while(0)
 
 // ============================================================================
@@ -342,6 +436,24 @@
 		printf("\n"); \
 	} while(0)
 
+/**
+ * Get_next_line-specific TEST_SUMMARY
+ * Uses g_gnl_tests_* counters
+ */
+# define GNL_TEST_SUMMARY() \
+	do { \
+		printf("\n" COLOR_BLUE "═══════════════════════════════════════\n"); \
+		printf("Get_next_line Test Summary:\n"); \
+		printf("═══════════════════════════════════════" COLOR_RESET "\n"); \
+		printf("Total: %d | " COLOR_GREEN "Passed: %d" COLOR_RESET " | ", \
+			g_gnl_tests_run, g_gnl_tests_passed); \
+		if (g_gnl_tests_failed > 0) \
+			printf(COLOR_RED "Failed: %d" COLOR_RESET "\n", g_gnl_tests_failed); \
+		else \
+			printf(COLOR_GREEN "Failed: 0" COLOR_RESET "\n"); \
+		printf("\n"); \
+	} while(0)
+
 // ============================================================================
 // PRINTF-SPECIFIC TEST MACRO
 // ============================================================================
@@ -366,6 +478,9 @@
 		char expected[1024] = {0}; \
 		char actual[1024] = {0}; \
 		int exp_ret, act_ret; \
+		g_printf_tests_run++; \
+		snprintf(g_current_test_desc, MAX_TEST_DESC_LEN, "%s", description); \
+		g_current_test_number = g_printf_tests_run; \
 		int saved_stdout = dup(STDOUT_FILENO); \
 		int devnull = open("/dev/null", O_WRONLY); \
 		FILE *exp_fp = fmemopen(expected, sizeof(expected), "w"); \
@@ -384,7 +499,6 @@
 		dup2(saved_stdout, STDOUT_FILENO); \
 		close(devnull); \
 		close(saved_stdout); \
-		g_printf_tests_run++; \
 		if (exp_ret == act_ret && strcmp(expected, actual) == 0) { \
 			printf(COLOR_GREEN "  ✓ #%d " COLOR_RESET "%s\n", g_printf_tests_run, description); \
 			g_printf_tests_passed++; \
@@ -395,6 +509,7 @@
 			printf("    Got:      \"%s\" (ret=%d)\n", actual, act_ret); \
 			g_printf_tests_failed++; \
 		} \
+		g_current_test_desc[0] = '\0'; \
 	} while(0)
 
 // ============================================================================

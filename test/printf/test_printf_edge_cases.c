@@ -348,18 +348,18 @@ void test_empty_patterns(void)
 
 void run_printf_edge_case_tests(void)
 {	
-	test_c_edge_cases();
-	test_s_edge_cases();
-	test_p_edge_cases();
-	test_d_edge_cases();
-	test_i_edge_cases();
-	test_u_edge_cases();
-	test_x_edge_cases();
-	test_X_edge_cases();
-	test_percent_edge_cases();
-	test_complex_mix();
-	test_whitespace_edge_cases();
-	test_empty_patterns();
+	TEST_WITH_TIMEOUT(test_c_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_s_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_p_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_d_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_i_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_u_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_x_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_X_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_percent_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_complex_mix, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_whitespace_edge_cases, TEST_TIMEOUT_SECONDS);
+	TEST_WITH_TIMEOUT(test_empty_patterns, TEST_TIMEOUT_SECONDS);
 	
-	TEST_SUMMARY();
+	PRINTF_TEST_SUMMARY();
 }

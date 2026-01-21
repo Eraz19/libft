@@ -6,13 +6,13 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:03:08 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/19 18:49:25 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/19 22:02:29 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static t_dstr	str_from_args_str(t_args_types value, t_rule_ctnt *ctnt)
+static t_dstr	str_from_args_str(t_args_types value, t_rule_content *ctnt)
 {
 	if (value._ptr == NULL)
 	{
@@ -23,7 +23,7 @@ static t_dstr	str_from_args_str(t_args_types value, t_rule_ctnt *ctnt)
 	return (dstr_c(cstr(value._ptr)));
 }
 
-static t_dstr	str_from_args_ptr(t_args_types value, t_rule_ctnt *ctnt)
+static t_dstr	str_from_args_ptr(t_args_types value, t_rule_content *ctnt)
 {
 	if (value._addr == NULL)
 		return (dstr_c(cstr("(nil)")));
@@ -31,7 +31,7 @@ static t_dstr	str_from_args_ptr(t_args_types value, t_rule_ctnt *ctnt)
 	return (str_from_long((t_i64)value._addr, cstr(CHARSET_HEX), FALSE));
 }
 
-t_dstr	str_from_args(t_args_types value, t_rule_ctnt *ctnt)
+t_dstr	str_from_args(t_args_types value, t_rule_content *ctnt)
 {
 	if (ctnt->type == _char)
 		return (str_from_char((t_i8)value._char));

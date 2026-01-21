@@ -6,11 +6,12 @@
 /*   By: adouieb <adouieb@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 23:38:57 by adouieb           #+#    #+#             */
-/*   Updated: 2026/01/16 11:51:33 by adouieb          ###   ########.fr       */
+/*   Updated: 2026/01/20 20:30:20 by adouieb          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 /**
  * str_from_buf - Converts a dynamic buffer to a dynamic string
